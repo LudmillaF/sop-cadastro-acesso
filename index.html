@@ -4,183 +4,117 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOP — Cadastro de Acesso</title>
-<link rel="icon" type="image/png" href="https://beinbr.com/favicon.ico">
-<link rel="shortcut icon" href="https://beinbr.com/favicon.ico">
+<link rel="icon" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f4f6f9;
-    color: #1a1a2e;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-  .header {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    color: white;
-    padding: 20px 24px 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-  }
-  .header h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.3px; }
-  .header p { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-  .header-meta { display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
-  .badge {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 20px;
-    padding: 2px 10px;
-    font-size: 11px;
-    color: #cbd5e1;
-  }
-  .nav {
-    background: #1e293b;
-    padding: 8px 24px;
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    position: sticky;
-    top: 72px;
-    z-index: 99;
-  }
-  .nav::-webkit-scrollbar { display: none; }
-  .nav-pill {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #94a3b8;
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 11px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.15s;
-  }
-  .nav-pill:hover, .nav-pill.active {
-    background: #3b82f6;
-    border-color: #3b82f6;
-    color: white;
-  }
-  .main { padding: 16px 20px 40px; max-width: 860px; margin: 0 auto; }
-  .section {
-    background: white;
-    border-radius: 10px;
-    margin-bottom: 12px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-    overflow: hidden;
-  }
-  .section-header {
-    padding: 14px 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    user-select: none;
-    border-left: 4px solid transparent;
-    transition: background 0.1s;
-  }
-  .section-header:hover { background: #f8fafc; }
-  .section-title { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; }
-  .section-icon { font-size: 18px; }
-  .chevron { font-size: 11px; color: #94a3b8; transition: transform 0.2s; }
-  .chevron.open { transform: rotate(180deg); }
-  .section-body { padding: 0 18px 16px; display: none; }
-  .section-body.open { display: block; }
-  .s-visao .section-header { border-color: #6366f1; }
-  .s-fluxo .section-header { border-color: #8b5cf6; }
-  .s-pre .section-header { border-color: #f59e0b; }
-  .s-jestor .section-header { border-color: #3b82f6; }
-  .s-idsecure .section-header { border-color: #10b981; }
-  .s-check .section-header { border-color: #22c55e; }
-  .s-erros .section-header { border-color: #ef4444; }
-  .s-especiais .section-header { border-color: #ec4899; }
-  .s-boas .section-header { border-color: #14b8a6; }
-  .quick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; }
-  .quick-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; }
-  .quick-card .label { font-size: 10px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin-bottom: 4px; }
-  .quick-card .value { font-size: 13px; font-weight: 600; color: #1e293b; }
-  .flow { display: flex; flex-direction: column; gap: 0; margin-top: 10px; }
-  .flow-step { display: flex; align-items: flex-start; gap: 12px; }
-  .flow-line { display: flex; flex-direction: column; align-items: center; }
-  .flow-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
-  .flow-connector { width: 2px; height: 28px; background: #e2e8f0; margin: 0 auto; }
-  .flow-content { padding-top: 4px; padding-bottom: 20px; }
-  .flow-content strong { font-size: 13px; color: #1e293b; display: block; }
-  .flow-content span { font-size: 12px; color: #64748b; }
-  .tag-j { background: #dbeafe; color: #1d4ed8; font-size: 10px; padding: 1px 6px; border-radius: 10px; margin-left: 6px; font-weight: 600; }
-  .tag-i { background: #d1fae5; color: #065f46; font-size: 10px; padding: 1px 6px; border-radius: 10px; margin-left: 6px; font-weight: 600; }
-  .req-group { margin-top: 12px; }
-  .req-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; padding: 3px 8px; border-radius: 4px; display: inline-block; }
-  .req-title.obrig { background: #fee2e2; color: #b91c1c; }
-  .req-title.import { background: #fef3c7; color: #92400e; }
-  .req-list { list-style: none; }
-  .req-list li { padding: 5px 0 5px 20px; position: relative; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
-  .req-list li:before { content: ""; position: absolute; left: 6px; top: 12px; width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; }
-  .req-list.obrig li:before { background: #ef4444; }
-  .req-list.import li:before { background: #f59e0b; }
-  .step-block { border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 10px; overflow: hidden; }
-  .step-header { padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
-  .step-header.j { background: #eff6ff; border-bottom: 1px solid #dbeafe; }
-  .step-header.i { background: #f0fdf4; border-bottom: 1px solid #d1fae5; }
-  .step-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: white; flex-shrink: 0; }
-  .step-num.j { background: #3b82f6; }
-  .step-num.i { background: #10b981; }
-  .step-name { font-weight: 700; font-size: 13px; }
-  .step-name.j { color: #1d4ed8; }
-  .step-name.i { color: #065f46; }
-  .step-body { padding: 12px 14px; }
-  .step-row { margin-bottom: 8px; }
-  .step-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 3px; }
-  .step-val { font-size: 13px; color: #334155; }
-  .warn-box { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 6px; padding: 8px 10px; font-size: 12px; color: #9a3412; margin-top: 8px; display: flex; gap: 6px; }
-  .tip-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 8px 10px; font-size: 12px; color: #075985; margin-top: 8px; display: flex; gap: 6px; }
-  .fields { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-  .field-chip { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-  .field-chip.critic { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
-  .field-chip.obrig { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
-  .field-chip.op { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
-  .if-block { margin-top: 8px; }
-  .if-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; padding: 8px 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 6px; font-size: 12px; }
-  .if-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-  .if-label.se { color: #7c3aed; }
-  .if-label.ent { color: #059669; }
-  .arrow-col { font-size: 16px; color: #94a3b8; text-align: center; }
-  .if-se { color: #4c1d95; }
-  .if-ent { color: #064e3b; font-weight: 600; }
-  .checklist { list-style: none; margin-top: 8px; }
-  .checklist li { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; cursor: pointer; }
-  .checklist li:last-child { border-bottom: none; }
-  .check-box { width: 18px; height: 18px; border: 2px solid #d1d5db; border-radius: 4px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-  .check-box.checked { background: #22c55e; border-color: #22c55e; color: white; font-size: 11px; }
-  .check-text { color: #374151; }
-  .check-text.checked { text-decoration: line-through; color: #9ca3af; }
-  .check-sys { font-size: 10px; padding: 1px 5px; border-radius: 10px; font-weight: 700; margin-left: 4px; vertical-align: middle; }
-  .cs-j { background: #dbeafe; color: #1d4ed8; }
-  .cs-i { background: #d1fae5; color: #065f46; }
-  .cs-b { background: #e0e7ff; color: #3730a3; }
-  .error-block { border: 1px solid #fecaca; border-radius: 8px; overflow: hidden; margin-top: 10px; }
-  .error-header { background: #fef2f2; padding: 8px 12px; font-weight: 700; font-size: 12px; color: #991b1b; display: flex; align-items: center; gap: 6px; }
-  .error-body { padding: 10px 12px; }
-  .error-row { margin-bottom: 6px; }
-  .error-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #94a3b8; margin-bottom: 2px; }
-  .error-val { font-size: 12px; color: #374151; }
-  .sit-block { background: #fdf4ff; border: 1px solid #e9d5ff; border-radius: 8px; padding: 12px; margin-top: 8px; }
-  .sit-title { font-weight: 700; font-size: 12px; color: #6b21a8; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-  .sit-body { font-size: 12px; color: #374151; }
-  .sit-body ol, .sit-body ul { padding-left: 16px; }
-  .sit-body li { margin-top: 3px; }
-  .bp-list { list-style: none; margin-top: 8px; }
-  .bp-list li { display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; align-items: flex-start; }
-  .bp-list li:last-child { border-bottom: none; }
-  .bp-icon { font-size: 14px; flex-shrink: 0; }
-  .subsection-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin: 14px 0 6px; }
-  hr { border: none; border-top: 1px solid #f1f5f9; margin: 10px 0; }
-  p { color: #475569; font-size: 13px; }
-  ol, ul { padding-left: 18px; }
-  li { margin: 3px 0; font-size: 13px; color: #374151; }
-  .mt { margin-top: 10px; }
+  :root { --dark:#333333; --mid:#808285; --light:#D1D3D4; --blue:#1D458B; --yellow:#D9A032; --bg:#f2f2f2; --white:#ffffff; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Source Sans Pro',sans-serif; background:var(--bg); color:var(--dark); font-size:14px; line-height:1.6; }
+  .header { background:var(--dark); color:white; padding:20px 24px 16px; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,0.2); border-bottom:3px solid var(--yellow); }
+  .header h1 { font-size:16px; font-weight:700; }
+  .header p { font-size:11px; color:var(--light); margin-top:2px; }
+  .header-meta { display:flex; gap:12px; margin-top:10px; flex-wrap:wrap; }
+  .badge { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:20px; padding:2px 10px; font-size:11px; color:var(--light); }
+  .nav { background:var(--blue); padding:8px 24px; display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; position:sticky; top:75px; z-index:99; }
+  .nav::-webkit-scrollbar { display:none; }
+  .nav-pill { background:transparent; border:1px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.8); border-radius:20px; padding:4px 12px; font-size:11px; cursor:pointer; white-space:nowrap; transition:all 0.15s; font-family:'Source Sans Pro',sans-serif; }
+  .nav-pill:hover, .nav-pill.active { background:var(--yellow); border-color:var(--yellow); color:var(--dark); font-weight:700; }
+  .main { padding:16px 20px 40px; max-width:860px; margin:0 auto; }
+  .section { background:var(--white); border-radius:8px; margin-bottom:12px; box-shadow:0 1px 4px rgba(0,0,0,0.07); overflow:hidden; }
+  .section-header { padding:14px 18px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; user-select:none; border-left:4px solid var(--blue); transition:background 0.1s; }
+  .section-header:hover { background:#f7f7f7; }
+  .section-title { display:flex; align-items:center; gap:10px; font-weight:700; font-size:14px; color:var(--blue); }
+  .chevron { font-size:11px; color:var(--mid); transition:transform 0.2s; }
+  .chevron.open { transform:rotate(180deg); }
+  .section-body { padding:0 18px 16px; display:none; }
+  .section-body.open { display:block; }
+  .quick-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; margin-top:10px; }
+  .quick-card { background:#f7f7f7; border:1px solid var(--light); border-radius:6px; padding:10px 12px; }
+  .quick-card .label { font-size:10px; text-transform:uppercase; color:var(--mid); letter-spacing:0.5px; margin-bottom:4px; }
+  .quick-card .value { font-size:13px; font-weight:700; color:var(--dark); }
+  .flow { display:flex; flex-direction:column; margin-top:10px; }
+  .flow-step { display:flex; align-items:flex-start; gap:12px; }
+  .flow-line { display:flex; flex-direction:column; align-items:center; }
+  .flow-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; flex-shrink:0; }
+  .flow-connector { width:2px; height:28px; background:var(--light); margin:0 auto; }
+  .flow-content { padding-top:4px; padding-bottom:20px; }
+  .flow-content strong { font-size:13px; color:var(--dark); display:block; }
+  .flow-content span { font-size:12px; color:var(--mid); }
+  .tag-j { background:#dce8f7; color:var(--blue); font-size:10px; padding:1px 6px; border-radius:10px; margin-left:6px; font-weight:700; }
+  .tag-i { background:#d1fae5; color:#065f46; font-size:10px; padding:1px 6px; border-radius:10px; margin-left:6px; font-weight:700; }
+  .req-group { margin-top:12px; }
+  .req-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; padding:3px 8px; border-radius:4px; display:inline-block; }
+  .req-title.obrig { background:#fee2e2; color:#b91c1c; }
+  .req-title.import { background:#fef3c7; color:#92400e; }
+  .req-list { list-style:none; }
+  .req-list li { padding:5px 0 5px 20px; position:relative; font-size:13px; border-bottom:1px solid #f2f2f2; }
+  .req-list li:before { content:""; position:absolute; left:6px; top:12px; width:6px; height:6px; border-radius:50%; background:var(--light); }
+  .req-list.obrig li:before { background:#ef4444; }
+  .req-list.import li:before { background:var(--yellow); }
+  .step-block { border:1px solid var(--light); border-radius:6px; margin-top:10px; overflow:hidden; }
+  .step-header { padding:10px 14px; display:flex; align-items:center; gap:10px; }
+  .step-header.j { background:#dce8f7; border-bottom:1px solid #b8d0ef; }
+  .step-header.i { background:#f0fdf4; border-bottom:1px solid #d1fae5; }
+  .step-num { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:white; flex-shrink:0; }
+  .step-num.j { background:var(--blue); }
+  .step-num.i { background:#10b981; }
+  .step-name { font-weight:700; font-size:13px; }
+  .step-name.j { color:var(--blue); }
+  .step-name.i { color:#065f46; }
+  .step-body { padding:12px 14px; }
+  .step-row { margin-bottom:8px; }
+  .step-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--mid); margin-bottom:3px; }
+  .step-val { font-size:13px; color:var(--dark); }
+  .warn-box { background:#fff7ed; border:1px solid #fed7aa; border-radius:6px; padding:8px 10px; font-size:12px; color:#9a3412; margin-top:8px; display:flex; gap:6px; }
+  .tip-box { background:#dce8f7; border:1px solid #b8d0ef; border-radius:6px; padding:8px 10px; font-size:12px; color:var(--blue); margin-top:8px; display:flex; gap:6px; }
+  .fields { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+  .field-chip { padding:3px 8px; border-radius:4px; font-size:11px; font-weight:600; }
+  .field-chip.critic { background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; }
+  .field-chip.op { background:#f2f2f2; color:var(--mid); border:1px solid var(--light); }
+  .if-block { margin-top:8px; }
+  .if-row { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; padding:8px 10px; background:#f7f7f7; border:1px solid var(--light); border-radius:6px; margin-bottom:6px; font-size:12px; }
+  .if-label { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px; }
+  .if-label.se { color:var(--blue); }
+  .if-label.ent { color:#059669; }
+  .arrow-col { font-size:16px; color:var(--mid); text-align:center; }
+  .if-se { color:var(--blue); }
+  .if-ent { color:#064e3b; font-weight:600; }
+  .checklist { list-style:none; margin-top:8px; }
+  .checklist li { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid #f2f2f2; font-size:13px; cursor:pointer; }
+  .checklist li:last-child { border-bottom:none; }
+  .check-box { width:18px; height:18px; border:2px solid var(--light); border-radius:4px; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+  .check-box.checked { background:var(--blue); border-color:var(--blue); color:white; font-size:11px; }
+  .check-text { color:var(--dark); }
+  .check-text.checked { text-decoration:line-through; color:var(--mid); }
+  .check-sys { font-size:10px; padding:1px 5px; border-radius:10px; font-weight:700; margin-left:4px; vertical-align:middle; }
+  .cs-j { background:#dce8f7; color:var(--blue); }
+  .cs-i { background:#d1fae5; color:#065f46; }
+  .cs-b { background:#fef3c7; color:#92400e; }
+  .error-block { border:1px solid #fecaca; border-radius:6px; overflow:hidden; margin-top:10px; }
+  .error-header { background:#fef2f2; padding:8px 12px; font-weight:700; font-size:12px; color:#991b1b; display:flex; align-items:center; gap:6px; }
+  .error-body { padding:10px 12px; }
+  .error-row { margin-bottom:6px; }
+  .error-label { font-size:10px; font-weight:700; text-transform:uppercase; color:var(--mid); margin-bottom:2px; }
+  .error-val { font-size:12px; color:var(--dark); }
+  .sit-block { background:#f7f7f7; border:1px solid var(--light); border-radius:6px; padding:12px; margin-top:8px; }
+  .sit-title { font-weight:700; font-size:12px; color:var(--blue); margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+  .sit-body { font-size:12px; color:var(--dark); }
+  .sit-body ol, .sit-body ul { padding-left:16px; }
+  .sit-body li { margin-top:3px; }
+  .bp-list { list-style:none; margin-top:8px; }
+  .bp-list li { display:flex; gap:8px; padding:6px 0; border-bottom:1px solid #f2f2f2; font-size:13px; align-items:flex-start; }
+  .bp-list li:last-child { border-bottom:none; }
+  .bp-icon { font-size:14px; flex-shrink:0; }
+  .subsection-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--mid); margin:14px 0 6px; }
+  .btn-link { display:flex; align-items:center; gap:8px; padding:8px 12px; background:#dce8f7; border:1px solid #b8d0ef; border-radius:6px; text-decoration:none; font-size:12px; font-weight:700; color:var(--blue); width:100%; }
+  .btn-link .arr { font-size:10px; font-weight:400; color:var(--yellow); margin-left:auto; }
+  .btn-link-green { display:flex; align-items:center; gap:8px; padding:8px 12px; background:#f0fdf4; border:1px solid #6ee7b7; border-radius:6px; text-decoration:none; font-size:12px; font-weight:700; color:#065f46; width:100%; }
+  .btn-link-green .arr { font-size:10px; font-weight:400; color:#10b981; margin-left:auto; }
+  p { color:var(--mid); font-size:13px; }
+  ol, ul { padding-left:18px; }
+  li { margin:3px 0; font-size:13px; color:var(--dark); }
+  .mt { margin-top:10px; }
+  a { color:var(--blue); }
 </style>
 </head>
 <body>
@@ -208,9 +142,9 @@
 
 <div class="main">
 
-<div class="section s-visao" id="s-visao">
+<div class="section" id="s-visao">
   <div class="section-header" onclick="toggle('visao')">
-    <div class="section-title"><span class="section-icon">🔎</span>Visão Rápida</div>
+    <div class="section-title"><span>🔎</span>Visão Rápida</div>
     <span class="chevron open" id="ch-visao">▼</span>
   </div>
   <div class="section-body open" id="b-visao">
@@ -226,47 +160,30 @@
   </div>
 </div>
 
-<div class="section s-fluxo" id="s-fluxo">
+<div class="section" id="s-fluxo">
   <div class="section-header" onclick="toggle('fluxo')">
-    <div class="section-title"><span class="section-icon">🧭</span>Fluxo Geral do Processo</div>
+    <div class="section-title"><span>🧭</span>Fluxo Geral do Processo</div>
     <span class="chevron" id="ch-fluxo">▼</span>
   </div>
   <div class="section-body" id="b-fluxo">
     <div class="flow">
-      <div class="flow-step">
-        <div class="flow-line"><div class="flow-dot" style="background:#6366f1">1</div><div class="flow-connector"></div></div>
-        <div class="flow-content"><strong>Formulário preenchido</strong><span>Card criado automaticamente no pipeline com status <strong>Nova Solicitação</strong> <span class="tag-j">JESTOR</span></span></div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-line"><div class="flow-dot" style="background:#3b82f6">2</div><div class="flow-connector"></div></div>
-        <div class="flow-content"><strong>Autorizar o cadastro <span class="tag-j">JESTOR</span></strong><span>Validar dados e mover o card para <strong>Cadastro Autorizado</strong></span></div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-line"><div class="flow-dot" style="background:#10b981">3</div><div class="flow-connector"></div></div>
-        <div class="flow-content"><strong>Cadastrar no Control ID <span class="tag-i">CONTROL ID</span></strong><span>Buscar se já existe → se não, criar do zero → mover card para <strong>Control ID Pendente</strong></span></div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-line"><div class="flow-dot" style="background:#f59e0b">4</div><div class="flow-connector"></div></div>
-        <div class="flow-content"><strong>Validar foto <span class="tag-i">CONTROL ID</span></strong><span>Se foto ok → <strong>Control ID Concluído</strong> · Se reprovada → <strong>Foto não aprovada</strong> (automação envia e-mail ao cliente)</span></div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-line"><div class="flow-dot" style="background:#8b5cf6">5</div><div class="flow-connector"></div></div>
-        <div class="flow-content"><strong>Condomínio <span class="tag-j">JESTOR</span></strong><span>Mover para <strong>Condomínio Pendente</strong> → automação envia e-mail → sistema avança para <strong>Condomínio Concluído</strong></span></div>
-      </div>
-      <div class="flow-step">
-        <div class="flow-line"><div class="flow-dot" style="background:#22c55e">6</div></div>
-        <div class="flow-content"><strong>Finalizado <span class="tag-j">JESTOR</span></strong><span>Mover card para <strong>Finalizado</strong> — processo encerrado</span></div>
-      </div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:#1D458B">1</div><div class="flow-connector"></div></div><div class="flow-content"><strong>Formulário preenchido</strong><span>Card criado automaticamente com status <strong>Nova Solicitação</strong> <span class="tag-j">JESTOR</span></span></div></div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:#1D458B">2</div><div class="flow-connector"></div></div><div class="flow-content"><strong>Autorizar o cadastro <span class="tag-j">JESTOR</span></strong><span>Validar dados e mover o card para <strong>Cadastro Autorizado</strong></span></div></div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:#10b981">3</div><div class="flow-connector"></div></div><div class="flow-content"><strong>Cadastrar no Control ID <span class="tag-i">CONTROL ID</span></strong><span>Buscar se já existe → se não, criar do zero → mover card para <strong>Control ID Pendente</strong></span></div></div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:#D9A032">4</div><div class="flow-connector"></div></div><div class="flow-content"><strong>Validar foto <span class="tag-i">CONTROL ID</span></strong><span>Se foto ok → <strong>Control ID Concluído</strong> · Se reprovada → <strong>Foto não aprovada</strong></span></div></div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:#808285">5</div><div class="flow-connector"></div></div><div class="flow-content"><strong>Condomínio <span class="tag-j">JESTOR</span></strong><span>Mover para <strong>Condomínio Pendente</strong> → automação envia e-mail → avança para <strong>Condomínio Concluído</strong></span></div></div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:#22c55e">6</div></div><div class="flow-content"><strong>Finalizado <span class="tag-j">JESTOR</span></strong><span>Mover card para <strong>Finalizado</strong> — processo encerrado</span></div></div>
     </div>
-    <div class="tip-box" style="margin-top:10px;">ℹ️ Cada colaboradora atua somente nos cadastros do seu condomínio. O canal de cadastro do condomínio (e-mail, app ou portal) está definido na tabela de perfil operacional do Jestor — consulte antes de executar essa etapa.
-      <div style="margin-top:6px;"><a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px;background:#e0f2fe;border:1px solid #7dd3fc;border-radius:6px;text-decoration:none;font-size:11px;font-weight:600;color:#0369a1;">📋 Tabela — Perfil Operacional <span style="color:#38bdf8;">abrir →</span></a></div>
+    <div class="tip-box" style="margin-top:10px;flex-direction:column;gap:8px;">
+      <span>ℹ️ Cada colaboradora atua somente nos cadastros do seu condomínio. O canal de cadastro do condomínio está definido na tabela de perfil operacional — consulte antes de executar essa etapa.</span>
+      <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px;background:#dce8f7;border:1px solid #b8d0ef;border-radius:6px;text-decoration:none;font-size:11px;font-weight:700;color:#1D458B;">📋 Tabela — Perfil Operacional <span style="color:#D9A032;">abrir →</span></a>
     </div>
   </div>
 </div>
 
-<div class="section s-pre" id="s-pre">
+<div class="section" id="s-pre">
   <div class="section-header" onclick="toggle('pre')">
-    <div class="section-title"><span class="section-icon">📋</span>Pré-Requisitos</div>
+    <div class="section-title"><span>📋</span>Pré-Requisitos</div>
     <span class="chevron" id="ch-pre">▼</span>
   </div>
   <div class="section-body" id="b-pre">
@@ -293,14 +210,13 @@
   </div>
 </div>
 
-<div class="section s-jestor" id="s-jestor">
+<div class="section" id="s-jestor">
   <div class="section-header" onclick="toggle('jestor')">
-    <div class="section-title"><span class="section-icon">🟦</span>Passo a Passo — Jestor</div>
+    <div class="section-title"><span>🟦</span>Passo a Passo — Jestor</div>
     <span class="chevron" id="ch-jestor">▼</span>
   </div>
   <div class="section-body" id="b-jestor">
     <p style="margin-bottom:10px;">Sistema de gestão interna. Aqui fica o registro central do cliente.</p>
-
     <div class="step-block">
       <div class="step-header j"><div class="step-num j">1</div><div class="step-name j">Acessar o Jestor e ir para o Pipeline de Cadastro de Acesso</div></div>
       <div class="step-body">
@@ -309,228 +225,149 @@
         <div class="tip-box">ℹ️ A tabela, o pipeline e os formulários já estão configurados. Não crie novos campos ou estruturas sem alinhamento com a equipe.</div>
       </div>
     </div>
-
     <div class="step-block">
       <div class="step-header j"><div class="step-num j">2</div><div class="step-name j">Localizar o card no pipeline</div></div>
       <div class="step-body">
         <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">O cliente preenche o formulário e o card já chega criado automaticamente no pipeline com status <strong>Nova Solicitação</strong>. A colaboradora não preenche o formulário — apenas localiza e trata o card.</div></div>
-        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Acesse o pipeline → localize o card do cliente em <strong>Nova Solicitação</strong> → abra o card para verificar os dados</div></div>
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Acesse o pipeline → localize o card em <strong>Nova Solicitação</strong> → abra para verificar os dados</div></div>
         <div class="if-block">
-          <div class="if-row">
-            <div class="if-col"><div class="if-label se">SE</div><div class="if-se">dados completos e corretos</div></div>
-            <div class="arrow-col">→</div>
-            <div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">O responsável da unidade move o card para <strong>Cadastro Autorizado</strong></div></div>
-          </div>
-          <div class="if-row">
-            <div class="if-col"><div class="if-label se">SE</div><div class="if-se">dados incompletos ou incorretos</div></div>
-            <div class="arrow-col">→</div>
-            <div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Não avançar — acionar o responsável da unidade antes de qualquer ação</div></div>
-          </div>
+          <div class="if-row"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">dados completos e corretos</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">O responsável da unidade move o card para <strong>Cadastro Autorizado</strong></div></div></div>
+          <div class="if-row"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">dados incompletos ou incorretos</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Não avançar — acionar o responsável da unidade antes de qualquer ação</div></div></div>
         </div>
         <div class="warn-box">⚠️ Só inicie o processo no Control ID após o card estar em <strong>Cadastro Autorizado</strong>.</div>
       </div>
     </div>
-
     <div class="step-block">
       <div class="step-header j"><div class="step-num j">3</div><div class="step-name j">Selecionar o formulário correto</div></div>
       <div class="step-body">
-        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Usar o formulário correspondente ao tipo de cliente para novos cadastros</div></div>
         <div class="step-row"><div class="step-label">Formulários disponíveis</div></div>
-        <div class="fields" style="margin-top:6px;gap:8px;flex-direction:column;">
-          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/777035e3f8679cd5b9c246f1f204062d" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#eff6ff;border:1px solid #93c5fd;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;color:#1d4ed8;">🏢 Formulário — Empresa XP <span style="font-size:10px;font-weight:400;color:#60a5fa;margin-left:auto;">abrir →</span></a>
-          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/59c9e4b42564ec85c60b581ad79c7fac" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#eff6ff;border:1px solid #93c5fd;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;color:#1d4ed8;">🏢 Formulário — Unidades de Coworking <span style="font-size:10px;font-weight:400;color:#60a5fa;margin-left:auto;">abrir →</span></a>
-          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/3c66595fa1f625f2df06dd0ec2cbb284" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#eff6ff;border:1px solid #93c5fd;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;color:#1d4ed8;">🏢 Formulário — Prudential <span style="font-size:10px;font-weight:400;color:#60a5fa;margin-left:auto;">abrir →</span></a>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/777035e3f8679cd5b9c246f1f204062d" target="_blank" class="btn-link">🏢 Formulário — Empresa XP <span class="arr">abrir →</span></a>
+          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/59c9e4b42564ec85c60b581ad79c7fac" target="_blank" class="btn-link">🏢 Formulário — Unidades de Coworking <span class="arr">abrir →</span></a>
+          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/3c66595fa1f625f2df06dd0ec2cbb284" target="_blank" class="btn-link">🏢 Formulário — Prudential <span class="arr">abrir →</span></a>
         </div>
         <div class="warn-box" style="margin-top:8px;">⚠️ Se o cliente não se encaixa em nenhum dos 3 formulários, não avance — acione a equipe antes de cadastrar.</div>
       </div>
     </div>
-
     <div class="step-block">
       <div class="step-header j"><div class="step-num j">4</div><div class="step-name j">Acompanhar o pipeline</div></div>
       <div class="step-body">
-        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Acompanhar e mover o card conforme o andamento do processo</div></div>
-        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Acesse o pipeline → localize o card do cliente → mova para a etapa correta</div></div>
-        <div class="fields" style="margin-top:6px;">
-          <a href="https://my.jestor.fun/app/o1fqxwb8kpxutoxn7s280" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#eff6ff;border:1px solid #93c5fd;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;color:#1d4ed8;width:100%;">🗂️ Pipeline — Cadastro de Acesso <span style="font-size:10px;font-weight:400;color:#60a5fa;margin-left:auto;">abrir →</span></a>
-        </div>
-
-        <div class="subsection-title" style="margin-top:14px;">Etapas do pipeline</div>
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Acesse o pipeline → localize o card → mova para a etapa correta</div></div>
+        <div style="margin-top:8px;"><a href="https://my.jestor.fun/app/o1fqxwb8kpxutoxn7s280" target="_blank" class="btn-link">🗂️ Pipeline — Cadastro de Acesso <span class="arr">abrir →</span></a></div>
+        <div class="subsection-title">Etapas do pipeline</div>
         <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px;">
-          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;align-items:start;padding:8px 10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;font-size:12px;">
-            <div style="font-weight:700;color:#0369a1;">🔵 Nova Solicitação</div>
-            <div style="color:#374151;">Automação. Card criado ao enviar o formulário. <strong>Não mover manualmente.</strong></div>
-          </div>
-          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;align-items:start;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;">
-            <div style="font-weight:700;color:#065f46;">✅ Cadastro Autorizado</div>
-            <div style="color:#374151;">Movido manualmente pelo responsável da unidade após validar os dados do formulário. Indica que o cadastro está pronto para o Control ID.</div>
-          </div>
-          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;align-items:start;padding:8px 10px;background:#fefce8;border:1px solid #fde047;border-radius:6px;font-size:12px;">
-            <div style="font-weight:700;color:#854d0e;">⏳ Control ID Pendente</div>
-            <div style="color:#374151;">Movido manualmente ao iniciar o cadastro no Control ID. Processo em andamento.</div>
-          </div>
-          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;align-items:start;padding:8px 10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;font-size:12px;">
-            <div style="font-weight:700;color:#9a3412;">📷 Foto não aprovada</div>
-            <div style="color:#374151;"><strong>Automação:</strong> ao mover o card para esta etapa, um e-mail é disparado ao cliente solicitando nova foto.<br><br><strong>Quem aprova a foto: o próprio Control ID</strong> — não é decisão da colaboradora.<br><br>Quando o cliente enviar a nova foto:<ol style="margin-top:6px;padding-left:16px;"><li>A foto chega por e-mail</li><li>Acesse a foto pelo card do cadastro no pipeline</li><li>Submeta a nova foto no Control ID</li><li>Aguarde a validação do Control ID</li></ol><div style="margin-top:8px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;padding:6px 8px;font-size:11px;">✅ Aprovada → mover para <strong>Control ID Concluído</strong></div><div style="margin-top:4px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:6px 8px;font-size:11px;">❌ Rejeitada → manter em <strong>Foto não aprovada</strong> — automação reenvia e-mail</div></div>
-          </div>
-          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;align-items:start;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;">
-            <div style="font-weight:700;color:#065f46;">✅ Control ID Concluído</div>
-            <div style="color:#374151;">Movido manualmente após cadastro e foto aprovados no Control ID. Se não há etapa de condomínio, avançar direto para Finalizado.</div>
-          </div>
-          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;align-items:start;padding:8px 10px;background:#fdf4ff;border:1px solid #e9d5ff;border-radius:6px;font-size:12px;">
-            <div style="font-weight:700;color:#6b21a8;">🏛️ Condomínio Pendente</div>
-            <div style="color:#374151;">O cadastro no condomínio <strong>sempre acontece</strong>, mas o canal varia. Consulte a <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="color:#6b21a8;font-weight:600;">tabela de perfil operacional</a> no Jestor para saber como proceder:<div style="margin-top:8px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:6px 8px;font-size:11px;">📧 <strong>E-mail</strong> → automação dispara ao mover o card. Nenhuma ação manual necessária.</div><div style="margin-top:4px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:6px 8px;font-size:11px;">📱 <strong>App ou Portal</strong> → não é responsabilidade do time de atendimento.</div><div style="margin-top:6px;font-size:11px;color:#6b21a8;">Após concluir → mover o card para <strong>Condomínio Concluído</strong>.</div></div>
-          </div>
-          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;align-items:start;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;">
-            <div style="font-weight:700;color:#065f46;">✅ Condomínio Concluído</div>
-            <div style="color:#374151;">Atualizado automaticamente após o envio do e-mail ao condomínio. Verificar e avançar para Finalizado.</div>
-          </div>
-          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;align-items:start;padding:8px 10px;background:#f0fdf4;border:1px solid #22c55e;border-radius:6px;font-size:12px;">
-            <div style="font-weight:700;color:#14532d;">🏁 Finalizado</div>
-            <div style="color:#374151;">Processo completo. Acesso liberado e tudo registrado.</div>
-          </div>
-          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;align-items:start;padding:8px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:12px;">
-            <div style="font-weight:700;color:#991b1b;">🚫 Negado</div>
-            <div style="color:#374151;">A decisão é do responsável da unidade, não da colaboradora. As regras de liberação devem ser alinhadas previamente com a liderança. Em caso de dúvida, <strong>consulte o responsável antes de mover o card.</strong></div>
-          </div>
-          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;align-items:start;padding:8px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;">
-            <div style="font-weight:700;color:#475569;">👤 Pessoa Desativada</div>
-            <div style="color:#374151;">Acionado quando a empresa do cliente informa desligamento.<ol style="margin-top:6px;padding-left:16px;"><li>Mover o card para <strong>Pessoa Desativada</strong></li><li>Consultar o e-mail do condomínio na <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="color:#6b21a8;font-weight:600;">tabela de perfil operacional</a> → coluna <strong>E-mail</strong></li><li>Enviar e-mail manualmente ao condomínio informando o bloqueio</li><li>Acessar o Control ID → <strong>Cadastro e Pessoas</strong></li><li>Usar a janela de busca → digitar o nome do cliente</li><li>Clicar na <strong>lixeira vermelha</strong> ao lado do registro</li><li>Clicar no botão <strong>Inativar</strong> para confirmar</li></ol><div style="margin-top:8px;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:6px 8px;font-size:11px;">⚠️ Não inative sem confirmação da empresa. A solicitação de desligamento precisa ter chegado antes de qualquer ação.</div></div>
-          </div>
-          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;align-items:start;padding:8px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:12px;">
-            <div style="font-weight:700;color:#991b1b;">🔁 Duplicado</div>
-            <div style="color:#374151;">Cliente já existe no Control ID. Não criar nada — encerrar o processo aqui.</div>
-          </div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;padding:8px 10px;background:#dce8f7;border:1px solid #b8d0ef;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#1D458B;">🔵 Nova Solicitação</div><div>Automação. Card criado ao enviar o formulário. <strong>Não mover manualmente.</strong></div></div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#065f46;">✅ Cadastro Autorizado</div><div>Movido manualmente pelo responsável da unidade após validar os dados. Indica que o cadastro está pronto para o Control ID.</div></div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;padding:8px 10px;background:#fefce8;border:1px solid #fde047;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#854d0e;">⏳ Control ID Pendente</div><div>Movido manualmente ao iniciar o cadastro no Control ID. Processo em andamento.</div></div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;padding:8px 10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#9a3412;">📷 Foto não aprovada</div><div><strong>Automação:</strong> um e-mail é disparado ao cliente ao mover o card. <strong>Quem aprova: o próprio Control ID.</strong><br>Ao receber nova foto: acesse pelo card → submeta no Control ID → aguarde validação.<br><div style="margin-top:4px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:4px;padding:4px 8px;font-size:11px;">✅ Aprovada → mover para <strong>Control ID Concluído</strong></div><div style="margin-top:4px;background:#fef2f2;border:1px solid #fecaca;border-radius:4px;padding:4px 8px;font-size:11px;">❌ Rejeitada → manter em <strong>Foto não aprovada</strong> — automação reenvia</div></div></div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#065f46;">✅ Control ID Concluído</div><div>Movido após cadastro e foto aprovados. Se não há etapa de condomínio, avançar direto para Finalizado.</div></div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;padding:8px 10px;background:#f7f7f7;border:1px solid #D1D3D4;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#1D458B;">🏛️ Condomínio Pendente</div><div>O cadastro no condomínio sempre acontece. Consulte a <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="color:#1D458B;font-weight:700;">tabela de perfil operacional</a> para saber o canal:<br><div style="margin-top:4px;background:#dce8f7;border:1px solid #b8d0ef;border-radius:4px;padding:4px 8px;font-size:11px;">📧 <strong>E-mail</strong> → automação dispara ao mover. Nenhuma ação manual.</div><div style="margin-top:4px;background:#f2f2f2;border:1px solid #D1D3D4;border-radius:4px;padding:4px 8px;font-size:11px;">📱 <strong>App ou Portal</strong> → não é responsabilidade do time de atendimento.</div></div></div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#065f46;">✅ Condomínio Concluído</div><div>Atualizado automaticamente após o envio do e-mail. Verificar e avançar para Finalizado.</div></div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #22c55e;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#14532d;">🏁 Finalizado</div><div>Processo completo. Acesso liberado e tudo registrado.</div></div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;padding:8px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#991b1b;">🚫 Negado</div><div>Decisão do responsável da unidade. Regras de liberação devem ser alinhadas com a liderança. Em dúvida, <strong>consulte o responsável antes de mover o card.</strong></div></div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;padding:8px 10px;background:#f2f2f2;border:1px solid #D1D3D4;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#808285;">👤 Pessoa Desativada</div><div>Acionado ao receber informação de desligamento.<ol style="margin-top:6px;padding-left:16px;"><li>Mover o card para <strong>Pessoa Desativada</strong></li><li>Consultar o e-mail do condomínio na <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="color:#1D458B;font-weight:700;">tabela de perfil operacional</a> → coluna <strong>E-mail</strong></li><li>Enviar e-mail manualmente ao condomínio informando o bloqueio</li><li>Control ID → <strong>Cadastro e Pessoas</strong> → buscar o nome → <strong>lixeira vermelha</strong> → <strong>Inativar</strong></li></ol><div class="warn-box" style="margin-top:6px;">⚠️ Não inative sem confirmação da empresa.</div></div></div>
+          <div style="display:grid;grid-template-columns:180px 1fr;gap:8px;padding:8px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#991b1b;">🔁 Duplicado</div><div>Cliente já existe no Control ID. Não criar nada — encerrar o processo aqui.</div></div>
         </div>
-        <div class="tip-box" style="margin-top:10px;">ℹ️ Etapas com automação (Nova Solicitação, Foto não aprovada, Condomínio Pendente → Concluído) não precisam de ação manual além de mover o card para o status correto que dispara a automação.</div>
+        <div class="tip-box" style="margin-top:10px;">ℹ️ Etapas com automação não precisam de ação manual além de mover o card para o status correto que dispara a automação.</div>
       </div>
     </div>
-
     <div class="step-block">
       <div class="step-header j"><div class="step-num j">5</div><div class="step-name j">Confirmar o registro</div></div>
       <div class="step-body">
-        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Revisar todos os dados salvos e anotar referência do registro</div></div>
-        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Volte para a tabela → localize o registro → confira os dados visíveis na listagem</div></div>
-        <div class="tip-box">ℹ️ Guarde o ID ou link do registro no Jestor. Use para rastrear o cliente e cruzar com o Control ID.</div>
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Volte para o pipeline → localize o card → confira os dados</div></div>
+        <div class="tip-box">ℹ️ Guarde o ID ou link do registro no Jestor para rastrear o cliente.</div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="section s-idsecure" id="s-idsecure">
+<div class="section" id="s-idsecure">
   <div class="section-header" onclick="toggle('idsecure')">
-    <div class="section-title"><span class="section-icon">🟩</span>Passo a Passo — Control ID</div>
+    <div class="section-title"><span>🟩</span>Passo a Passo — Control ID</div>
     <span class="chevron" id="ch-idsecure">▼</span>
   </div>
   <div class="section-body" id="b-idsecure">
-    <p style="margin-bottom:10px;">Sistema de controle de acesso físico. Só acesse aqui após o card estar em <strong>Cadastro Autorizado</strong> no Jestor.</p>
-    <div class="warn-box" style="margin-bottom:10px;">⚠️ Sempre busque o cliente no Control ID antes de criar. Criar duplicata aqui gera conflito de acesso.</div>
-
+    <p style="margin-bottom:10px;">Sistema de controle de acesso físico. Só acesse aqui após o card estar em <strong>Cadastro Autorizado</strong>.</p>
+    <div class="warn-box" style="margin-bottom:10px;">⚠️ Sempre busque o cliente no Control ID antes de criar. Duplicata aqui gera conflito de acesso.</div>
     <div class="step-block">
       <div class="step-header i"><div class="step-num i">1</div><div class="step-name i">Acessar o Control ID</div></div>
       <div class="step-body">
-        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Entrar na plataforma do Control ID com e-mail e senha</div></div>
-        <div class="fields" style="margin-top:6px;">
-          <a href="https://idsecure.com.br/auth/login" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;color:#065f46;width:100%;">🔐 Login — Control ID <span style="font-size:10px;font-weight:400;color:#10b981;margin-left:auto;">abrir →</span></a>
-        </div>
-        <div class="tip-box" style="margin-top:8px;">ℹ️ Use seu e-mail e senha pessoais de acesso. Não compartilhe credenciais com outras colaboradoras.</div>
+        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Entrar na plataforma com e-mail e senha</div></div>
+        <a href="https://idsecure.com.br/auth/login" target="_blank" class="btn-link-green" style="margin-top:8px;">🔐 Login — Control ID <span class="arr">abrir →</span></a>
+        <div class="tip-box" style="margin-top:8px;">ℹ️ Use suas credenciais pessoais. Não compartilhe com outras colaboradoras.</div>
       </div>
     </div>
-
     <div class="step-block">
       <div class="step-header i"><div class="step-num i">2</div><div class="step-name i">Buscar se o cliente já existe</div></div>
       <div class="step-body">
         <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Menu lateral → <strong>Cadastros → Pessoas</strong> → campo <strong>Pesquisar</strong> → digitar nome e sobrenome</div></div>
-        <div class="tip-box" style="margin-top:6px;">ℹ️ O filtro padrão já vem em <strong>Ativos</strong>. Mantenha assim para buscar apenas cadastros ativos.</div>
+        <div class="tip-box" style="margin-top:6px;">ℹ️ Mantenha o filtro em <strong>Ativos</strong>.</div>
         <div class="if-block" style="margin-top:10px;">
-          <div class="if-row" style="background:#fef2f2;border-color:#fecaca;">
-            <div class="if-col"><div class="if-label se">SE</div><div class="if-se">pessoa <strong>encontrada</strong></div></div>
-            <div class="arrow-col">→</div>
-            <div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent"><strong>Não crie nada.</strong> Volte ao Jestor → mova o card para <strong>Duplicado</strong></div></div>
-          </div>
-          <div class="if-row" style="background:#f0fdf4;border-color:#d1fae5;">
-            <div class="if-col"><div class="if-label se">SE</div><div class="if-se">pessoa <strong>não encontrada</strong></div></div>
-            <div class="arrow-col">→</div>
-            <div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Clicar em <strong>Nova Pessoa</strong> (botão azul, canto superior direito) → Passo 3</div></div>
-          </div>
+          <div class="if-row" style="background:#fef2f2;border-color:#fecaca;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">pessoa <strong>encontrada</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent"><strong>Não crie nada.</strong> Jestor → mova o card para <strong>Duplicado</strong></div></div></div>
+          <div class="if-row" style="background:#f0fdf4;border-color:#d1fae5;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">pessoa <strong>não encontrada</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Clicar em <strong>Nova Pessoa</strong> (botão azul, canto superior direito) → Passo 3</div></div></div>
         </div>
-        <div class="warn-box" style="margin-top:8px;">⚠️ Pesquise sempre por nome e sobrenome — só o nome pode gerar falso negativo.</div>
+        <div class="warn-box" style="margin-top:8px;">⚠️ Pesquise por nome e sobrenome — só o nome pode gerar falso negativo.</div>
       </div>
     </div>
-
     <div class="step-block">
       <div class="step-header i"><div class="step-num i">3</div><div class="step-name i">Preencher os dados da nova pessoa</div></div>
       <div class="step-body">
         <div class="step-row"><div class="step-label">Campos a preencher</div>
           <div class="fields" style="flex-direction:column;gap:6px;margin-top:4px;">
-            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">Nome</span><span style="color:#374151;padding-top:2px;">Nome completo — idêntico ao Jestor</span></div>
-            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">Observações</span><span style="color:#374151;padding-top:2px;">Formato: <code style="background:#f1f5f9;padding:1px 4px;border-radius:3px;">[Unidade] - [Empresa]</code> — Ex: <code style="background:#f1f5f9;padding:1px 4px;border-radius:3px;">Brooklin - Pipo</code>, <code style="background:#f1f5f9;padding:1px 4px;border-radius:3px;">Prudential - AN</code></span></div>
-            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip op">E-mail</span><span style="color:#374151;padding-top:2px;">Se disponível no formulário</span></div>
-            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip op">Número de Celular</span><span style="color:#374151;padding-top:2px;">Se disponível no formulário</span></div>
-            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip op">Matrícula / Ramal</span><span style="color:#374151;padding-top:2px;">Preencher somente se aplicável</span></div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">Nome</span><span style="padding-top:2px;">Nome completo — idêntico ao Jestor</span></div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">Observações</span><span style="padding-top:2px;">Formato: <code style="background:#f2f2f2;padding:1px 4px;border-radius:3px;">[Unidade] - [Empresa]</code> — Ex: <code style="background:#f2f2f2;padding:1px 4px;border-radius:3px;">Brooklin - Pipo</code></span></div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip op">E-mail / Celular / Matrícula</span><span style="padding-top:2px;">Se disponível no formulário</span></div>
           </div>
         </div>
-        <div class="warn-box" style="margin-top:8px;">⚠️ O campo Observações é obrigatório. Siga o padrão de nomenclatura já usado no sistema — consulte registros existentes se tiver dúvida do formato.</div>
+        <div class="warn-box" style="margin-top:8px;">⚠️ Campo Observações é obrigatório. Siga o padrão de nomenclatura do sistema.</div>
       </div>
     </div>
-
     <div class="step-block">
       <div class="step-header i"><div class="step-num i">4</div><div class="step-name i">Adicionar e validar a foto</div></div>
       <div class="step-body">
         <div class="step-row"><div class="step-label">Como fazer</div>
           <ol style="padding-left:16px;margin-top:4px;">
-            <li>Clicar no ícone de <strong>upload</strong> (nuvem azul) ao lado da foto</li>
-            <li>Selecionar a foto nos arquivos do computador <span style="font-size:11px;color:#64748b;">(foto chegou com o formulário — acesse pelo card no pipeline)</span></li>
+            <li>Clicar no ícone de <strong>upload</strong> (nuvem azul)</li>
+            <li>Selecionar a foto nos arquivos do computador</li>
             <li>Aguardar o upload concluir</li>
-            <li>Clicar no <strong>ícone de check</strong> (✔) para validar a foto</li>
+            <li>Clicar no <strong>ícone de check</strong> (✔) para validar</li>
             <li>Aguardar o retorno do sistema</li>
           </ol>
         </div>
         <div class="if-block" style="margin-top:10px;">
-          <div class="if-row" style="background:#f0fdf4;border-color:#d1fae5;">
-            <div class="if-col"><div class="if-label se">SE</div><div class="if-se">foto <strong>aprovada</strong></div></div>
-            <div class="arrow-col">→</div>
-            <div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Continuar para o Passo 5 (Grupos e Empresas)</div></div>
-          </div>
-          <div class="if-row" style="background:#fef2f2;border-color:#fecaca;">
-            <div class="if-col"><div class="if-label se">SE</div><div class="if-se">foto <strong>reprovada</strong></div></div>
-            <div class="arrow-col">→</div>
-            <div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Voltar ao Jestor → mover card para <strong>Foto não aprovada</strong> → automação envia e-mail ao cliente</div></div>
-          </div>
+          <div class="if-row" style="background:#f0fdf4;border-color:#d1fae5;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">foto <strong>aprovada</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Continuar para o Passo 5</div></div></div>
+          <div class="if-row" style="background:#fef2f2;border-color:#fecaca;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">foto <strong>reprovada</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Jestor → card para <strong>Foto não aprovada</strong> → automação envia e-mail</div></div></div>
         </div>
-        <div class="tip-box" style="margin-top:8px;">ℹ️ Há também o ícone de câmera (verde) para tirar foto ao vivo e o ícone vermelho para remover. Use sempre o upload de arquivo.</div>
+        <div class="tip-box" style="margin-top:8px;">ℹ️ Use sempre o upload de arquivo. Câmera ao vivo e ícone vermelho (remover) também estão disponíveis.</div>
       </div>
     </div>
-
     <div class="step-block">
       <div class="step-header i"><div class="step-num i">5</div><div class="step-name i">Vincular grupo e empresa</div></div>
       <div class="step-body">
         <div class="step-row"><div class="step-label">Como fazer</div>
           <ol style="padding-left:16px;margin-top:4px;">
             <li>Clicar na aba <strong>Grupos e Empresas</strong></li>
-            <li>Clicar no botão <strong>Vincular</strong> (azul, canto superior direito)</li>
-            <li>No modal, usar o campo <strong>Buscar</strong> na coluna Disponíveis</li>
-            <li>Localizar a empresa no formato <code style="background:#f1f5f9;padding:1px 4px;border-radius:3px;">Be in [Unidade] - [Andar]° - [Empresa]</code></li>
-            <li>Clicar na <strong>seta azul</strong> para mover para Selecionados</li>
-            <li>Clicar em <strong>Salvar</strong></li>
+            <li>Clicar em <strong>Vincular</strong> (azul, canto superior direito)</li>
+            <li>Buscar a empresa no formato <code style="background:#f2f2f2;padding:1px 4px;border-radius:3px;">Be in [Unidade] - [Andar]° - [Empresa]</code></li>
+            <li>Clicar na <strong>seta azul</strong> → mover para Selecionados → <strong>Salvar</strong></li>
           </ol>
         </div>
-        <div class="warn-box">⚠️ As empresas já estão cadastradas — não crie novas. Se não encontrar, confira o nome no Jestor e tente a busca com termo mais curto.</div>
+        <div class="warn-box">⚠️ Empresas já estão cadastradas — não crie novas.</div>
       </div>
     </div>
-
     <div class="step-block">
       <div class="step-header i"><div class="step-num i">6</div><div class="step-name i">Salvar e atualizar o pipeline</div></div>
       <div class="step-body">
-        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Salvar o cadastro no Control ID → voltar ao Jestor → mover o card para <strong>Control ID Concluído</strong></div></div>
-        <div class="tip-box">ℹ️ Só mova o card para Control ID Concluído após salvar tudo e confirmar que a foto foi aprovada.</div>
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Salvar no Control ID → Jestor → mover card para <strong>Control ID Concluído</strong></div></div>
+        <div class="tip-box">ℹ️ Só mova para Control ID Concluído após salvar tudo e confirmar que a foto foi aprovada.</div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="section s-check" id="s-check">
+<div class="section" id="s-check">
   <div class="section-header" onclick="toggle('check')">
-    <div class="section-title"><span class="section-icon">✅</span>Checklist Final de Validação</div>
+    <div class="section-title"><span>✅</span>Checklist Final de Validação</div>
     <span class="chevron" id="ch-check">▼</span>
   </div>
   <div class="section-body" id="b-check">
@@ -548,13 +385,13 @@
       <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Etapa do condomínio concluída (quando aplicável) <span class="check-sys cs-j">JESTOR</span></span></li>
       <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Card movido para Finalizado <span class="check-sys cs-j">JESTOR</span></span></li>
     </ul>
-    <div id="check-progress" style="margin-top:12px;padding:10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:8px;font-size:12px;color:#065f46;text-align:center;">0 / 11 itens concluídos</div>
+    <div id="check-progress" style="margin-top:12px;padding:10px;background:#dce8f7;border:1px solid #b8d0ef;border-radius:6px;font-size:12px;color:#1D458B;text-align:center;font-weight:600;">0 / 11 itens concluídos</div>
   </div>
 </div>
 
-<div class="section s-erros" id="s-erros">
+<div class="section" id="s-erros">
   <div class="section-header" onclick="toggle('erros')">
-    <div class="section-title"><span class="section-icon">⚠️</span>Erros Comuns (com solução)</div>
+    <div class="section-title"><span>⚠️</span>Erros Comuns</div>
     <span class="chevron" id="ch-erros">▼</span>
   </div>
   <div class="section-body" id="b-erros">
@@ -563,94 +400,61 @@
       <div class="error-body">
         <div class="error-row"><div class="error-label">Por que acontece</div><div class="error-val">Não foi feita a busca pelo CPF antes de criar novo registro</div></div>
         <div class="error-row"><div class="error-label">Como evitar</div><div class="error-val">Sempre busque o CPF/CNPJ antes de criar. Sem exceção.</div></div>
-        <div class="error-row"><div class="error-label">Como corrigir</div><div class="error-val">Identificar qual registro está correto → excluir ou mesclar o duplicado → atualizar no Control ID se necessário</div></div>
+        <div class="error-row"><div class="error-label">Como corrigir</div><div class="error-val">Identificar o registro correto → excluir ou mesclar o duplicado → atualizar no Control ID se necessário</div></div>
       </div>
     </div>
     <div class="error-block">
       <div class="error-header">🔴 Acesso negado mesmo após cadastro</div>
       <div class="error-body">
-        <div class="error-row"><div class="error-label">Por que acontece</div><div class="error-val">Na maioria dos casos: <strong>foto reprovada ou não atualizada</strong> no Control ID. Em alguns casos: <strong>erro de sincronização entre o Control ID e a controladora física presente no local</strong> — o cadastro existe no sistema, mas ainda não foi transmitido para o equipamento.</div></div>
-        <div class="error-row"><div class="error-label">Como evitar</div><div class="error-val">Sempre validar a foto no Control ID antes de mover o card para Control ID Concluído.</div></div>
-        <div class="error-row"><div class="error-label">Como corrigir</div><div class="error-val">Primeiro, verificar a foto no Control ID → se reprovada, mover o card para <strong>Foto não aprovada</strong>. Se a foto estiver aprovada, aguardar a sincronização com a controladora física ou acionar o responsável técnico.</div></div>
+        <div class="error-row"><div class="error-label">Por que acontece</div><div class="error-val">Na maioria dos casos: <strong>foto reprovada ou não atualizada</strong>. Em alguns casos: <strong>erro de sincronização entre o Control ID e a controladora física</strong> — cadastro existe no sistema, mas ainda não foi transmitido ao equipamento.</div></div>
+        <div class="error-row"><div class="error-label">Como evitar</div><div class="error-val">Sempre validar a foto antes de mover o card para Control ID Concluído.</div></div>
+        <div class="error-row"><div class="error-label">Como corrigir</div><div class="error-val">Primeiro verificar a foto → se reprovada, mover para <strong>Foto não aprovada</strong>. Se aprovada, aguardar sincronização com a controladora ou acionar o responsável técnico.</div></div>
       </div>
     </div>
     <div class="error-block">
-      <div class="error-header">🔴 Tipo de acesso incorreto</div>
+      <div class="error-header">🔴 Empresa errada em Grupos e Empresas</div>
       <div class="error-body">
-        <div class="error-row"><div class="error-label">Por que acontece</div><div class="error-val">Empresa errada selecionada em Grupos e Empresas no Control ID</div></div>
+        <div class="error-row"><div class="error-label">Por que acontece</div><div class="error-val">Empresa errada selecionada no Control ID</div></div>
         <div class="error-row"><div class="error-label">Como evitar</div><div class="error-val">Confirmar a empresa com os dados do Jestor antes de salvar</div></div>
-        <div class="error-row"><div class="error-label">Como corrigir</div><div class="error-val">Editar o cadastro no Control ID → aba Grupos e Empresas → desvincular a empresa errada → vincular a correta → salvar</div></div>
+        <div class="error-row"><div class="error-label">Como corrigir</div><div class="error-val">Editar no Control ID → Grupos e Empresas → desvincular a errada → vincular a correta → salvar</div></div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="section s-especiais" id="s-especiais">
+<div class="section" id="s-especiais">
   <div class="section-header" onclick="toggle('especiais')">
-    <div class="section-title"><span class="section-icon">🔄</span>Situações Especiais</div>
+    <div class="section-title"><span>🔄</span>Situações Especiais</div>
     <span class="chevron" id="ch-especiais">▼</span>
   </div>
   <div class="section-body" id="b-especiais">
     <div class="sit-block">
       <div class="sit-title">🔴 Cliente encontrado no Control ID (duplicado)</div>
-      <div class="sit-body">
-        <ol>
-          <li><strong>Não crie nada</strong> no Control ID</li>
-          <li>Volte ao Jestor imediatamente</li>
-          <li>Localize o card do cliente no pipeline</li>
-          <li>Mova o card para o status <strong>Duplicado</strong></li>
-          <li>Encerre o processo — não avance para nenhuma outra etapa</li>
-        </ol>
-        <div class="warn-box" style="margin-top:8px;">⚠️ Não tente corrigir ou mesclar registros no Control ID por conta própria. Sinalize como duplicado e aguarde orientação se necessário.</div>
-      </div>
+      <div class="sit-body"><ol><li><strong>Não crie nada</strong> no Control ID</li><li>Volte ao Jestor → localize o card → mova para <strong>Duplicado</strong></li><li>Encerre o processo</li></ol><div class="warn-box" style="margin-top:8px;">⚠️ Não tente corrigir registros no Control ID por conta própria.</div></div>
     </div>
     <div class="sit-block">
       <div class="sit-title">✏️ Alteração de dados de cliente já cadastrado</div>
-      <div class="sit-body">
-        <ol>
-          <li>Altere primeiro no Jestor</li>
-          <li>Salve e confirme os novos dados</li>
-          <li>Replique a alteração no Control ID</li>
-          <li>Verifique se o acesso continua funcionando após a alteração</li>
-        </ol>
-        <div class="warn-box" style="margin-top:8px;">⚠️ Nunca altere só em um sistema. Sempre atualize os dois.</div>
-      </div>
+      <div class="sit-body"><ol><li>Altere primeiro no Jestor → salve e confirme</li><li>Replique a alteração no Control ID</li><li>Verifique se o acesso continua funcionando</li></ol><div class="warn-box" style="margin-top:8px;">⚠️ Nunca altere só em um sistema. Sempre atualize os dois.</div></div>
     </div>
     <div class="sit-block">
       <div class="sit-title">🚨 Urgência (acesso precisa funcionar agora)</div>
-      <div class="sit-body">
-        <ol>
-          <li>Cadastre primeiro no Control ID com os dados mínimos disponíveis</li>
-          <li>Libere o acesso temporariamente</li>
-          <li>Imediatamente após: complete o cadastro no Jestor</li>
-          <li>Atualize o Control ID com os dados completos</li>
-          <li>Sinalize para o time que houve um cadastro emergencial</li>
-        </ol>
-        <div class="warn-box" style="margin-top:8px;">⚠️ Acesso emergencial não dispensa o cadastro completo posterior.</div>
-      </div>
+      <div class="sit-body"><ol><li>Cadastre no Control ID com dados mínimos disponíveis</li><li>Libere o acesso temporariamente</li><li>Complete o cadastro no Jestor imediatamente após</li><li>Atualize o Control ID com dados completos</li><li>Sinalize para o time</li></ol><div class="warn-box" style="margin-top:8px;">⚠️ Acesso emergencial não dispensa o cadastro completo posterior.</div></div>
     </div>
     <div class="sit-block">
-      <div class="sit-title">💻 Falha no sistema (Jestor ou Control ID fora do ar)</div>
-      <div class="sit-body">
-        <ul>
-          <li>Registre os dados do cliente em local seguro (planilha de contingência ou papel)</li>
-          <li>Não tente cadastrar sem o sistema — isso evita registros incompletos</li>
-          <li>Assim que o sistema voltar, realize o cadastro completo</li>
-          <li>Comunique a equipe sobre o atraso</li>
-        </ul>
-      </div>
+      <div class="sit-title">💻 Falha no sistema</div>
+      <div class="sit-body"><ul><li>Registre os dados do cliente em local seguro</li><li>Não tente cadastrar sem o sistema — isso evita registros incompletos</li><li>Assim que voltar, realize o cadastro completo</li><li>Comunique a equipe sobre o atraso</li></ul></div>
     </div>
   </div>
 </div>
 
-<div class="section s-boas" id="s-boas">
+<div class="section" id="s-boas">
   <div class="section-header" onclick="toggle('boas')">
-    <div class="section-title"><span class="section-icon">💡</span>Boas Práticas</div>
+    <div class="section-title"><span>💡</span>Boas Práticas</div>
     <span class="chevron" id="ch-boas">▼</span>
   </div>
   <div class="section-body" id="b-boas">
     <ul class="bp-list">
-      <li><span class="bp-icon">🔍</span>Sempre busque o CPF/CNPJ no Jestor antes de criar qualquer cadastro novo</li>
+      <li><span class="bp-icon">🔍</span>Sempre busque o CPF/CNPJ antes de criar qualquer cadastro novo</li>
       <li><span class="bp-icon">📋</span>Use o checklist desta SOP antes de iniciar — mesmo quando estiver com pressa</li>
       <li><span class="bp-icon">💬</span>Em caso de dúvida, pergunte antes de salvar — é mais rápido do que corrigir depois</li>
       <li><span class="bp-icon">🧪</span>Sempre teste o acesso após liberar — não assuma que funcionou</li>
@@ -663,56 +467,11 @@
 </div>
 
 </div>
-
 <script>
-  function toggle(id) {
-    const body = document.getElementById('b-' + id);
-    const ch = document.getElementById('ch-' + id);
-    if (body.classList.contains('open')) {
-      body.classList.remove('open');
-      ch.classList.remove('open');
-    } else {
-      body.classList.add('open');
-      ch.classList.add('open');
-    }
-  }
-
-  function goTo(id) {
-    const el = document.getElementById('s-' + id);
-    if (!el) return;
-    const body = document.getElementById('b-' + id);
-    const ch = document.getElementById('ch-' + id);
-    if (body && !body.classList.contains('open')) {
-      body.classList.add('open');
-      if (ch) ch.classList.add('open');
-    }
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function checkItem(li) {
-    const box = li.querySelector('.check-box');
-    const text = li.querySelector('.check-text');
-    box.classList.toggle('checked');
-    text.classList.toggle('checked');
-    updateProgress();
-  }
-
-  function updateProgress() {
-    const total = document.querySelectorAll('#checklist li').length;
-    const done = document.querySelectorAll('#checklist .check-box.checked').length;
-    const prog = document.getElementById('check-progress');
-    prog.textContent = done + ' / ' + total + ' itens concluídos';
-    if (done === total) {
-      prog.style.background = '#f0fdf4';
-      prog.style.borderColor = '#22c55e';
-      prog.style.color = '#065f46';
-      prog.textContent = '🎉 ' + done + '/' + total + ' — Processo completo!';
-    } else if (done > 0) {
-      prog.style.background = '#fefce8';
-      prog.style.borderColor = '#fde047';
-      prog.style.color = '#854d0e';
-    }
-  }
+  function toggle(id){const b=document.getElementById('b-'+id),c=document.getElementById('ch-'+id);b.classList.toggle('open');c.classList.toggle('open');}
+  function goTo(id){const el=document.getElementById('s-'+id);if(!el)return;const b=document.getElementById('b-'+id),c=document.getElementById('ch-'+id);if(b&&!b.classList.contains('open')){b.classList.add('open');if(c)c.classList.add('open');}el.scrollIntoView({behavior:'smooth',block:'start'});}
+  function checkItem(li){const box=li.querySelector('.check-box'),txt=li.querySelector('.check-text');box.classList.toggle('checked');txt.classList.toggle('checked');updateProgress();}
+  function updateProgress(){const total=document.querySelectorAll('#checklist li').length,done=document.querySelectorAll('#checklist .check-box.checked').length,p=document.getElementById('check-progress');if(done===total){p.style.background='#f0fdf4';p.style.borderColor='#22c55e';p.style.color='#065f46';p.textContent='🎉 '+done+'/'+total+' — Processo completo!';}else{p.style.background='#dce8f7';p.style.borderColor='#b8d0ef';p.style.color='#1D458B';p.textContent=done+' / '+total+' itens concluídos';}}
 </script>
 </body>
 </html>
