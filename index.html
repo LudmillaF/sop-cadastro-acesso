@@ -252,6 +252,7 @@
   <button class="nav-pill" onclick="goTo('pre')">📋 Pré-requisitos</button>
   <button class="nav-pill" onclick="goTo('jestor')">🟦 Jestor</button>
   <button class="nav-pill" onclick="goTo('idsecure')">🟩 Control ID</button>
+  <button class="nav-pill" onclick="goTo('unifi')">🔐 UniFi</button>
   <button class="nav-pill" onclick="goTo('check')">✅ Checklist</button>
   <button class="nav-pill" onclick="goTo('erros')">⚠️ Erros</button>
   <button class="nav-pill" onclick="goTo('especiais')">🔄 Especiais</button>
@@ -600,6 +601,42 @@
         <div class="tip-box">ℹ️ Só mova o card para Control ID Concluído após salvar tudo e confirmar que a foto foi aprovada.</div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- UNI FI -->
+<div class="section" id="s-unifi">
+  <div class="section-header" onclick="toggle('unifi')">
+    <div class="section-title"><span class="section-icon">🔐</span>UniFi Access</div>
+    <span class="chevron" id="ch-unifi">▼</span>
+  </div>
+  <div class="section-body" id="b-unifi">
+    <div class="quick-grid">
+      <div class="quick-card"><div class="label">Sistema</div><div class="value">UniFi Access</div></div>
+      <div class="quick-card"><div class="label">Quando usar</div><div class="value">Após autorização do cadastro no Jestor</div></div>
+      <div class="quick-card"><div class="label">Modelo</div><div class="value">User ou Visitor</div></div>
+      <div class="quick-card"><div class="label">Fonte</div><div class="value">Perfil operacional da unidade</div></div>
+    </div>
+    <div class="tip-box mt">ℹ️ O fluxo UniFi é tratado como continuidade do cadastro de acesso já autorizado no Jestor. O cadastro segue para o UniFi apenas quando o modelo e a configuração da unidade estiverem definidos.</div>
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">1</div><div class="step-name j">Validar a configuração da unidade</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Confirmar a configuração ativa da unidade no Jestor, incluindo Door Group, Access Policy e token de integração.</div></div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header i"><div class="step-num i">2</div><div class="step-name i">Criar ou localizar o registro no UniFi</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Regra</div><div class="step-val">Se o cadastro já existir no UniFi, atualizar; se não, criar novo registro no modelo certo (User ou Visitor).</div></div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">3</div><div class="step-name j">Atualizar o status no Jestor</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Status operacionais</div><div class="step-val">Usar <strong>Control ID / UniFi Pendente</strong> enquanto a integração estiver em andamento e <strong>Control ID / UniFi Concluído</strong> quando o envio for confirmado.</div></div>
+      </div>
+    </div>
+    <div class="warn-box mt">⚠️ Se a configuração da unidade não estiver disponível ou houver erro de API, não tente “forçar” o cadastro no UniFi. Marque a situação para correção e aguarde a configuração correta.</div>
   </div>
 </div>
 
