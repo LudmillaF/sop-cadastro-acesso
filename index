@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOP — Cadastro de Acesso</title>
+<link rel="icon" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --dark:#333333; --mid:#808285; --light:#D1D3D4; --blue:#1D458B; --yellow:#D9A032; --purple:#5B3F8C; --green:#10b981; --bg:#f2f2f2; --white:#ffffff; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Source Sans Pro',sans-serif; background:var(--bg); color:var(--dark); font-size:14px; line-height:1.6; }
+  .sticky-top { position:sticky; top:0; z-index:100; }
+  .header { background:var(--dark); color:white; padding:20px 24px 16px; box-shadow:0 2px 12px rgba(0,0,0,0.2); border-bottom:3px solid var(--yellow); }
+  .header h1 { font-size:16px; font-weight:700; }
+  .header p { font-size:11px; color:var(--light); margin-top:2px; }
+  .header-meta { display:flex; gap:12px; margin-top:10px; flex-wrap:wrap; }
+  .badge { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:20px; padding:2px 10px; font-size:11px; color:var(--light); }
+  .nav { background:var(--blue); padding:8px 24px; display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; }
+  .nav::-webkit-scrollbar { display:none; }
+  .nav-pill { background:transparent; border:1px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.8); border-radius:20px; padding:4px 12px; font-size:11px; cursor:pointer; white-space:nowrap; transition:all 0.15s; font-family:'Source Sans Pro',sans-serif; }
+  .nav-pill:hover, .nav-pill.active { background:var(--yellow); border-color:var(--yellow); color:var(--dark); font-weight:700; }
+  .main { padding:16px 20px 40px; max-width:860px; margin:0 auto; }
+  .section { background:var(--white); border-radius:8px; margin-bottom:12px; box-shadow:0 1px 4px rgba(0,0,0,0.07); overflow:hidden; }
+  .section-header { padding:14px 18px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; user-select:none; border-left:4px solid var(--blue); transition:background 0.1s; }
+  .section-header:hover { background:#f7f7f7; }
+  .section-title { display:flex; align-items:center; gap:10px; font-weight:700; font-size:14px; color:var(--blue); }
+  .s-unifi .section-header { border-color:var(--purple); }
+  .s-unifi .section-title { color:var(--purple); }
+  .chevron { font-size:11px; color:var(--mid); transition:transform 0.2s; }
+  .chevron.open { transform:rotate(180deg); }
+  .section-body { padding:0 18px 16px; display:none; }
+  .section-body.open { display:block; }
+  .quick-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; margin-top:10px; }
+  .quick-card { background:#f7f7f7; border:1px solid var(--light); border-radius:6px; padding:10px 12px; }
+  .quick-card .label { font-size:10px; text-transform:uppercase; color:var(--mid); letter-spacing:0.5px; margin-bottom:4px; }
+  .quick-card .value { font-size:13px; font-weight:700; color:var(--dark); }
+  .flow { display:flex; flex-direction:column; margin-top:10px; }
+  .flow-step { display:flex; align-items:flex-start; gap:12px; }
+  .flow-line { display:flex; flex-direction:column; align-items:center; }
+  .flow-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; flex-shrink:0; }
+  .flow-connector { width:2px; height:28px; background:var(--light); margin:0 auto; }
+  .flow-content { padding-top:4px; padding-bottom:20px; }
+  .flow-content strong { font-size:13px; color:var(--dark); display:block; }
+  .flow-content span { font-size:12px; color:var(--mid); }
+  .tag-j { background:#dce8f7; color:var(--blue); font-size:10px; padding:1px 6px; border-radius:10px; margin-left:6px; font-weight:700; }
+  .tag-i { background:#d1fae5; color:#065f46; font-size:10px; padding:1px 6px; border-radius:10px; margin-left:6px; font-weight:700; }
+  .tag-u { background:#ede9f8; color:var(--purple); font-size:10px; padding:1px 6px; border-radius:10px; margin-left:6px; font-weight:700; }
+  .tag-o { background:#fef3c7; color:#92400e; font-size:10px; padding:1px 6px; border-radius:10px; margin-left:6px; font-weight:700; }
+  .req-group { margin-top:12px; }
+  .req-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; padding:3px 8px; border-radius:4px; display:inline-block; }
+  .req-title.obrig { background:#fee2e2; color:#b91c1c; }
+  .req-title.import { background:#fef3c7; color:#92400e; }
+  .req-list { list-style:none; }
+  .req-list li { padding:5px 0 5px 20px; position:relative; font-size:13px; border-bottom:1px solid #f2f2f2; }
+  .req-list li:before { content:""; position:absolute; left:6px; top:12px; width:6px; height:6px; border-radius:50%; background:var(--light); }
+  .req-list.obrig li:before { background:#ef4444; }
+  .req-list.import li:before { background:var(--yellow); }
+  .step-block { border:1px solid var(--light); border-radius:6px; margin-top:10px; overflow:hidden; }
+  .step-header { padding:10px 14px; display:flex; align-items:center; gap:10px; }
+  .step-header.j { background:#dce8f7; border-bottom:1px solid #b8d0ef; }
+  .step-header.i { background:#f0fdf4; border-bottom:1px solid #d1fae5; }
+  .step-header.u { background:#ede9f8; border-bottom:1px solid #c4b5fd; }
+  .step-num { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:white; flex-shrink:0; }
+  .step-num.j { background:var(--blue); }
+  .step-num.i { background:var(--green); }
+  .step-num.u { background:var(--purple); }
+  .step-name { font-weight:700; font-size:13px; }
+  .step-name.j { color:var(--blue); }
+  .step-name.i { color:#065f46; }
+  .step-name.u { color:var(--purple); }
+  .step-body { padding:12px 14px; }
+  .step-row { margin-bottom:8px; }
+  .step-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--mid); margin-bottom:3px; }
+  .step-val { font-size:13px; color:var(--dark); }
+  .warn-box { background:#fff7ed; border:1px solid #fed7aa; border-radius:6px; padding:8px 10px; font-size:12px; color:#9a3412; margin-top:8px; display:flex; gap:6px; }
+  .tip-box { background:#dce8f7; border:1px solid #b8d0ef; border-radius:6px; padding:8px 10px; font-size:12px; color:var(--blue); margin-top:8px; display:flex; gap:6px; }
+  .tip-box-purple { background:#ede9f8; border:1px solid #c4b5fd; border-radius:6px; padding:8px 10px; font-size:12px; color:var(--purple); margin-top:8px; display:flex; gap:6px; }
+  .fields { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+  .field-chip { padding:3px 8px; border-radius:4px; font-size:11px; font-weight:600; }
+  .field-chip.critic { background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; }
+  .field-chip.op { background:#f2f2f2; color:var(--mid); border:1px solid var(--light); }
+  .if-block { margin-top:8px; }
+  .if-row { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; padding:8px 10px; background:#f7f7f7; border:1px solid var(--light); border-radius:6px; margin-bottom:6px; font-size:12px; }
+  .if-label { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px; }
+  .if-label.se { color:var(--blue); }
+  .if-label.ent { color:#059669; }
+  .arrow-col { font-size:16px; color:var(--mid); text-align:center; }
+  .if-se { color:var(--blue); }
+  .if-ent { color:#064e3b; font-weight:600; }
+  .checklist { list-style:none; margin-top:8px; }
+  .checklist li { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid #f2f2f2; font-size:13px; cursor:pointer; }
+  .checklist li:last-child { border-bottom:none; }
+  .check-box { width:18px; height:18px; border:2px solid var(--light); border-radius:4px; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+  .check-box.checked { background:var(--blue); border-color:var(--blue); color:white; font-size:11px; }
+  .check-text { color:var(--dark); }
+  .check-text.checked { text-decoration:line-through; color:var(--mid); }
+  .check-sys { font-size:10px; padding:1px 5px; border-radius:10px; font-weight:700; margin-left:4px; vertical-align:middle; }
+  .cs-j { background:#dce8f7; color:var(--blue); }
+  .cs-i { background:#d1fae5; color:#065f46; }
+  .cs-u { background:#ede9f8; color:var(--purple); }
+  .cs-b { background:#fef3c7; color:#92400e; }
+  .error-block { border:1px solid #fecaca; border-radius:6px; overflow:hidden; margin-top:10px; }
+  .error-header { background:#fef2f2; padding:8px 12px; font-weight:700; font-size:12px; color:#991b1b; display:flex; align-items:center; gap:6px; }
+  .error-body { padding:10px 12px; }
+  .error-row { margin-bottom:6px; }
+  .error-label { font-size:10px; font-weight:700; text-transform:uppercase; color:var(--mid); margin-bottom:2px; }
+  .error-val { font-size:12px; color:var(--dark); }
+  .sit-block { background:#f7f7f7; border:1px solid var(--light); border-radius:6px; padding:12px; margin-top:8px; }
+  .sit-title { font-weight:700; font-size:12px; color:var(--blue); margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+  .sit-body { font-size:12px; color:var(--dark); }
+  .sit-body ol, .sit-body ul { padding-left:16px; }
+  .sit-body li { margin-top:3px; }
+  .bp-list { list-style:none; margin-top:8px; }
+  .bp-list li { display:flex; gap:8px; padding:6px 0; border-bottom:1px solid #f2f2f2; font-size:13px; align-items:flex-start; }
+  .bp-list li:last-child { border-bottom:none; }
+  .bp-icon { font-size:14px; flex-shrink:0; }
+  .subsection-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--mid); margin:14px 0 6px; }
+  .btn-link { display:flex; align-items:center; gap:8px; padding:8px 12px; background:#dce8f7; border:1px solid #b8d0ef; border-radius:6px; text-decoration:none; font-size:12px; font-weight:700; color:var(--blue); width:100%; }
+  .btn-link .arr { font-size:10px; font-weight:400; color:var(--yellow); margin-left:auto; }
+  .btn-link-green { display:flex; align-items:center; gap:8px; padding:8px 12px; background:#f0fdf4; border:1px solid #6ee7b7; border-radius:6px; text-decoration:none; font-size:12px; font-weight:700; color:#065f46; width:100%; }
+  .btn-link-green .arr { font-size:10px; font-weight:400; color:#10b981; margin-left:auto; }
+  .btn-link-purple { display:flex; align-items:center; gap:8px; padding:8px 12px; background:#ede9f8; border:1px solid #c4b5fd; border-radius:6px; text-decoration:none; font-size:12px; font-weight:700; color:var(--purple); width:100%; }
+  .btn-link-purple .arr { font-size:10px; font-weight:400; color:var(--yellow); margin-left:auto; }
+  .routing-box { border:2px solid var(--yellow); border-radius:8px; padding:12px; margin-top:10px; background:#fffbeb; }
+  .routing-title { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#92400e; margin-bottom:10px; }
+  p { color:var(--mid); font-size:13px; }
+  ol, ul { padding-left:18px; }
+  li { margin:3px 0; font-size:13px; color:var(--dark); }
+  .mt { margin-top:10px; }
+  a { color:var(--blue); }
+</style>
+</head>
+<body>
+
+<div class="sticky-top">
+<div class="header">
+  <h1>📋 SOP — Cadastro de Acesso de Clientes</h1>
+  <p>Jestor + Control ID + UniFi · Be in · Fonte única de verdade (POP operacional)</p>
+  <div class="header-meta">
+    <span class="badge">v2.0</span>
+    <span class="badge">Uso: Atendimento + Ops</span>
+  </div>
+</div>
+<div class="nav">
+  <button class="nav-pill active" onclick="goTo('visao')">🔎 Visão rápida</button>
+  <button class="nav-pill" onclick="goTo('fluxo')">🧭 Fluxo</button>
+  <button class="nav-pill" onclick="goTo('pre')">📋 Pré-requisitos</button>
+  <button class="nav-pill" onclick="goTo('jestor')">🟦 Jestor</button>
+  <button class="nav-pill" onclick="goTo('unifi')">🟣 UniFi</button>
+  <button class="nav-pill" onclick="goTo('idsecure')">🟩 Control ID</button>
+  <button class="nav-pill" onclick="goTo('check')">✅ Checklist</button>
+  <button class="nav-pill" onclick="goTo('erros')">⚠️ Erros</button>
+  <button class="nav-pill" onclick="goTo('especiais')">🔄 Especiais</button>
+  <button class="nav-pill" onclick="goTo('boas')">💡 Boas práticas</button>
+</div>
+</div>
+
+<div class="main">
+
+<div class="section" id="s-visao">
+  <div class="section-header" onclick="toggle('visao')">
+    <div class="section-title"><span>🔎</span>Visão Rápida</div>
+    <span class="chevron open" id="ch-visao">▼</span>
+  </div>
+  <div class="section-body open" id="b-visao">
+    <div class="quick-grid">
+      <div class="quick-card"><div class="label">O que é</div><div class="value">Cadastro de acesso de cliente nas plataformas</div></div>
+      <div class="quick-card"><div class="label">Quando usar</div><div class="value">Novo cliente, renovação ou troca de acesso</div></div>
+      <div class="quick-card"><div class="label">Sistemas</div><div class="value">Jestor + Control ID ou UniFi</div></div>
+      <div class="quick-card"><div class="label">Ordem</div><div class="value">1º Jestor · 2º Sistema da unidade</div></div>
+      <div class="quick-card"><div class="label">Quem executa</div><div class="value">Depende do sistema e da unidade</div></div>
+      <div class="quick-card"><div class="label">Resultado esperado</div><div class="value">Cliente cadastrado e com acesso liberado</div></div>
+    </div>
+    <div class="routing-box mt">
+      <div class="routing-title">⚡ Roteamento rápido — quem faz o quê</div>
+      <div class="if-block" style="margin-top:0;">
+        <div class="if-row" style="background:#ede9f8;border-color:#c4b5fd;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">unidade usa <strong>UniFi</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent"><strong>Ops</strong> faz o cadastro (por enquanto)</div></div></div>
+        <div class="if-row" style="background:#f0fdf4;border-color:#d1fae5;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">unidade usa <strong>Control ID</strong> + tem recepcionista</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent"><strong>Atendimento</strong> faz o cadastro</div></div></div>
+        <div class="if-row" style="background:#fefce8;border-color:#fde047;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">unidade usa <strong>Control ID</strong> + sem recepcionista</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent"><strong>Ops</strong> faz o cadastro</div></div></div>
+      </div>
+      <div style="font-size:11px;color:#92400e;margin-top:8px;">📋 O sistema e a presença de recepcionista estão registrados na <strong>tabela de perfil operacional</strong> do Jestor.</div>
+    </div>
+    <div class="tip-box mt">ℹ️ O processo sempre começa pelo Jestor. Consulte o perfil operacional da unidade antes de qualquer ação no sistema de acesso.</div>
+  </div>
+</div>
+
+<div class="section" id="s-fluxo">
+  <div class="section-header" onclick="toggle('fluxo')">
+    <div class="section-title"><span>🧭</span>Fluxo Geral do Processo</div>
+    <span class="chevron" id="ch-fluxo">▼</span>
+  </div>
+  <div class="section-body" id="b-fluxo">
+    <div class="flow">
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:var(--blue)">1</div><div class="flow-connector"></div></div><div class="flow-content"><strong>Formulário preenchido</strong><span>Card criado automaticamente com status <strong>Nova Solicitação</strong> <span class="tag-j">JESTOR</span></span></div></div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:var(--blue)">2</div><div class="flow-connector"></div></div><div class="flow-content"><strong>Autorizar o cadastro <span class="tag-j">JESTOR</span></strong><span>Responsável valida os dados e move para <strong>Cadastro Autorizado</strong></span></div></div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:var(--yellow)">3</div><div class="flow-connector"></div></div><div class="flow-content"><strong>Identificar o sistema da unidade <span class="tag-j">JESTOR</span></strong><span>Consultar tabela de perfil operacional → Control ID ou UniFi? Tem recepcionista?</span></div></div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:var(--purple)">4a</div><div class="flow-connector"></div></div><div class="flow-content"><strong>Cadastrar no UniFi <span class="tag-u">UNIFI</span> <span class="tag-o">OPS</span></strong><span>Criar usuário → vincular ao grupo padrão → mover para <strong>Control ID / UniFi Pendente</strong></span></div></div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:var(--green)">4b</div><div class="flow-connector"></div></div><div class="flow-content"><strong>Cadastrar no Control ID <span class="tag-i">CONTROL ID</span></strong><span>Buscar → criar → foto → grupo → mover para <strong>Control ID / UniFi Pendente</strong></span></div></div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:var(--mid)">5</div><div class="flow-connector"></div></div><div class="flow-content"><strong>Condomínio <span class="tag-j">JESTOR</span></strong><span>Mover para <strong>Condomínio Pendente</strong> → automação envia e-mail → avança para <strong>Condomínio Concluído</strong></span></div></div>
+      <div class="flow-step"><div class="flow-line"><div class="flow-dot" style="background:#22c55e">6</div></div><div class="flow-content"><strong>Finalizado <span class="tag-j">JESTOR</span></strong><span>Mover card para <strong>Finalizado</strong> — processo encerrado</span></div></div>
+    </div>
+    <div class="tip-box" style="margin-top:10px;flex-direction:column;gap:8px;">
+      <span>ℹ️ Consulte sempre a tabela de perfil operacional para saber o sistema da unidade e se há recepcionista.</span>
+      <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px;background:#dce8f7;border:1px solid #b8d0ef;border-radius:6px;text-decoration:none;font-size:11px;font-weight:700;color:var(--blue);">📋 Tabela — Perfil Operacional <span style="color:var(--yellow);">abrir →</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="s-pre">
+  <div class="section-header" onclick="toggle('pre')">
+    <div class="section-title"><span>📋</span>Pré-Requisitos</div>
+    <span class="chevron" id="ch-pre">▼</span>
+  </div>
+  <div class="section-body" id="b-pre">
+    <div class="req-group">
+      <span class="req-title obrig">🔴 Obrigatório</span>
+      <ul class="req-list obrig">
+        <li>CPF ou CNPJ do cliente (válido)</li>
+        <li>Nome completo do cliente</li>
+        <li>Unidade / espaço associado ao acesso</li>
+        <li>Contrato ativo ou confirmação de vínculo</li>
+        <li>Data de início do acesso</li>
+        <li>Foto do cliente — enviada com o formulário (Control ID) ou não necessária (UniFi)</li>
+        <li>E-mail do cliente (obrigatório no UniFi)</li>
+      </ul>
+    </div>
+    <div class="req-group">
+      <span class="req-title import">🟡 Importante</span>
+      <ul class="req-list import">
+        <li>Telefone de contato</li>
+        <li>Data de fim do acesso (se aplicável)</li>
+      </ul>
+    </div>
+    <div class="warn-box mt">⚠️ Todos os dados chegam preenchidos pelo cliente via formulário. O CPF é obrigatório para o cadastro no condomínio.</div>
+  </div>
+</div>
+
+<div class="section" id="s-jestor">
+  <div class="section-header" onclick="toggle('jestor')">
+    <div class="section-title"><span>🟦</span>Passo a Passo — Jestor</div>
+    <span class="chevron" id="ch-jestor">▼</span>
+  </div>
+  <div class="section-body" id="b-jestor">
+    <p style="margin-bottom:10px;">Sistema de gestão interna. Ponto de entrada obrigatório para qualquer cadastro.</p>
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">1</div><div class="step-name j">Acessar o Jestor e ir para o Pipeline de Cadastro de Acesso</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Acesse <strong>app.jestor.com</strong> → entre com suas credenciais → localize <strong>OPS | Pipeline de Cadastro de Acesso</strong></div></div>
+        <div style="margin-top:8px;"><a href="https://my.jestor.fun/app/o1fqxwb8kpxutoxn7s280" target="_blank" class="btn-link">🗂️ Pipeline — Cadastro de Acesso <span class="arr">abrir →</span></a></div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">2</div><div class="step-name j">Localizar o card no pipeline</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">O cliente preenche o formulário e o card já chega criado automaticamente com status <strong>Nova Solicitação</strong>. A colaboradora não preenche o formulário — apenas localiza e trata o card.</div></div>
+        <div class="if-block">
+          <div class="if-row"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">dados completos e corretos</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Responsável da unidade move para <strong>Cadastro Autorizado</strong></div></div></div>
+          <div class="if-row"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">dados incompletos ou incorretos</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Não avançar — acionar o responsável antes de qualquer ação</div></div></div>
+        </div>
+        <div class="warn-box">⚠️ Só avance para o sistema de acesso após o card estar em <strong>Cadastro Autorizado</strong>.</div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">3</div><div class="step-name j">Identificar o sistema da unidade</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Consultar a tabela de perfil operacional para saber qual sistema a unidade usa e se há recepcionista</div></div>
+        <div style="margin-top:8px;"><a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" class="btn-link">📋 Tabela — Perfil Operacional <span class="arr">abrir →</span></a></div>
+        <div class="routing-box" style="margin-top:10px;">
+          <div class="routing-title">Com base no perfil operacional, siga para:</div>
+          <div class="if-block" style="margin-top:0;">
+            <div class="if-row" style="background:#ede9f8;border-color:#c4b5fd;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">sistema = <strong>UniFi</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Acionar <strong>Ops</strong> → seção UniFi</div></div></div>
+            <div class="if-row" style="background:#f0fdf4;border-color:#d1fae5;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">sistema = <strong>Control ID</strong> + tem recepcionista</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent"><strong>Atendimento</strong> segue → seção Control ID</div></div></div>
+            <div class="if-row" style="background:#fefce8;border-color:#fde047;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">sistema = <strong>Control ID</strong> + sem recepcionista</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Acionar <strong>Ops</strong> → seção Control ID</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">4</div><div class="step-name j">Selecionar o formulário correto</div></div>
+      <div class="step-body">
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/777035e3f8679cd5b9c246f1f204062d" target="_blank" class="btn-link">🏢 Formulário — Empresa XP <span class="arr">abrir →</span></a>
+          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/59c9e4b42564ec85c60b581ad79c7fac" target="_blank" class="btn-link">🏢 Formulário — Unidades de Coworking <span class="arr">abrir →</span></a>
+          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/3c66595fa1f625f2df06dd0ec2cbb284" target="_blank" class="btn-link">🏢 Formulário — Prudential <span class="arr">abrir →</span></a>
+        </div>
+        <div class="warn-box" style="margin-top:8px;">⚠️ Se o cliente não se encaixa em nenhum dos 3 formulários, não avance — acione a equipe antes de cadastrar.</div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">5</div><div class="step-name j">Acompanhar o pipeline</div></div>
+      <div class="step-body">
+        <div class="subsection-title">Etapas do pipeline</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px;">
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#dce8f7;border:1px solid #b8d0ef;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:var(--blue);">🔵 Nova Solicitação</div><div>Automação. Card criado ao enviar o formulário. <strong>Não mover manualmente.</strong></div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#065f46;">✅ Cadastro Autorizado</div><div>Movido pelo responsável da unidade após validar os dados. Pronto para o sistema de acesso.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#fefce8;border:1px solid #fde047;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#854d0e;">⏳ Control ID / UniFi Pendente</div><div>Movido ao iniciar o cadastro no sistema de acesso. Processo em andamento.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#9a3412;">📷 Foto não aprovada</div><div><strong>Automação:</strong> e-mail disparado ao cliente. Quem aprova: o próprio Control ID. Aplicável somente a unidades Control ID.<br><div style="margin-top:4px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:4px;padding:4px 8px;font-size:11px;">✅ Aprovada → <strong>Control ID / UniFi Concluído</strong></div><div style="margin-top:4px;background:#fef2f2;border:1px solid #fecaca;border-radius:4px;padding:4px 8px;font-size:11px;">❌ Rejeitada → manter aqui — automação reenvia e-mail</div></div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#065f46;">✅ Control ID / UniFi Concluído</div><div>Movido após cadastro concluído no sistema de acesso. Se não há etapa de condomínio, avançar para Finalizado.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f7f7f7;border:1px solid var(--light);border-radius:6px;font-size:12px;"><div style="font-weight:700;color:var(--blue);">🏛️ Condomínio Pendente</div><div>Canal varia por unidade. Consulte a <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="color:var(--blue);font-weight:700;">tabela de perfil operacional</a>.<br><div style="margin-top:4px;background:#dce8f7;border:1px solid #b8d0ef;border-radius:4px;padding:4px 8px;font-size:11px;">📧 E-mail → automação dispara ao mover o card.</div><div style="margin-top:4px;background:#f2f2f2;border:1px solid var(--light);border-radius:4px;padding:4px 8px;font-size:11px;">📱 App ou Portal → não é responsabilidade do time de atendimento.</div></div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#065f46;">✅ Condomínio Concluído</div><div>Atualizado automaticamente após envio do e-mail. Avançar para Finalizado.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #22c55e;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#14532d;">🏁 Finalizado</div><div>Processo completo. Acesso liberado e tudo registrado.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#991b1b;">🚫 Negado</div><div>Decisão do responsável da unidade. Regras de liberação devem ser alinhadas com a liderança previamente.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f2f2f2;border:1px solid var(--light);border-radius:6px;font-size:12px;"><div style="font-weight:700;color:var(--mid);">👤 Pessoa Inativa</div><div>Acionado quando a empresa informa desligamento.<ol style="margin-top:6px;padding-left:16px;"><li>Mover card para <strong>Pessoa Inativa</strong></li><li>Consultar e-mail do condomínio na <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="color:var(--blue);font-weight:700;">tabela de perfil operacional</a> → coluna E-mail</li><li>Enviar e-mail ao condomínio informando o bloqueio</li><li>Inativar no sistema de acesso da unidade</li></ol><div class="warn-box" style="margin-top:6px;">⚠️ Não inative sem confirmação da empresa.</div></div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#991b1b;">🔁 Duplicado</div><div>Cliente já existe no sistema de acesso. Não criar nada — encerrar o processo aqui.</div></div>
+        </div>
+        <div class="tip-box" style="margin-top:10px;">ℹ️ Etapas com automação não precisam de ação manual além de mover o card para o status correto.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section s-unifi" id="s-unifi">
+  <div class="section-header" onclick="toggle('unifi')">
+    <div class="section-title"><span>🟣</span>Passo a Passo — UniFi</div>
+    <span class="chevron" id="ch-unifi">▼</span>
+  </div>
+  <div class="section-body" id="b-unifi">
+    <p style="margin-bottom:10px;">Sistema de controle de acesso para unidades UniFi. <strong>Executado exclusivamente por Ops (Ludmilla ou Luana).</strong></p>
+    <div class="tip-box-purple" style="margin-bottom:10px;">🟣 O UniFi avisa pelo e-mail se a pessoa já está cadastrada. O e-mail é obrigatório.</div>
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">1</div><div class="step-name u">Acessar o UniFi</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Entrar no portal UniFi com suas credenciais</div></div>
+        <a href="https://unifi.ui.com" target="_blank" class="btn-link-purple" style="margin-top:8px;">🔐 Login — UniFi <span class="arr">abrir →</span></a>
+        <div class="warn-box" style="margin-top:8px;">⚠️ Acesso restrito a Ops. Somente Ludmilla e Luana têm credenciais.</div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">2</div><div class="step-name u">Selecionar a unidade correta</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Clique no seletor de site no menu superior esquerdo → selecione a unidade correspondente ao cadastro</div></div>
+        <div class="warn-box">⚠️ Confirme que está na unidade correta antes de criar o usuário.</div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">3</div><div class="step-name u">Criar novo usuário</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Painel lateral → <strong>Usuários ativos</strong> → clique no <strong>+ azul</strong> → abre o formulário <em>Criar novo usuário</em></div></div>
+        <div class="step-row"><div class="step-label">Campos a preencher</div>
+          <div class="fields" style="flex-direction:column;gap:6px;margin-top:4px;">
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">Primeiro nome</span><span style="padding-top:2px;">Primeiro nome — conforme Jestor</span></div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">Sobrenome</span><span style="padding-top:2px;">Restante do nome — conforme Jestor</span></div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">E-mail</span><span style="padding-top:2px;">Obrigatório. O sistema avisa se o e-mail já existe — não criar duplicata.</span></div>
+          </div>
+        </div>
+        <div class="tip-box" style="margin-top:8px;">ℹ️ Se o UniFi alertar que o e-mail já existe, volte ao Jestor e mova o card para <strong>Duplicado</strong>.</div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">4</div><div class="step-name u">Vincular ao grupo da unidade</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Na seção <strong>Grupos</strong> do formulário → <strong>Selecionar grupos</strong> → selecionar o User Group padrão da unidade</div></div>
+        <div class="step-row"><div class="step-label">Como saber o grupo correto</div><div class="step-val">Consulte a <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="color:var(--blue);font-weight:700;">tabela de perfil operacional</a> — campo <strong>User Group padrão</strong> da unidade</div></div>
+        <div class="warn-box">⚠️ Sem o grupo vinculado, o cliente não terá as políticas de acesso da unidade aplicadas.</div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">5</div><div class="step-name u">Criar e confirmar</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Revisar os dados → clicar em <strong>Criar</strong> → confirmar que o usuário aparece na lista de Usuários ativos</div></div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">6</div><div class="step-name u">Atualizar o pipeline no Jestor</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Voltar ao Jestor → mover o card para <strong>Control ID / UniFi Concluído</strong></div></div>
+        <div class="tip-box">ℹ️ Só mova o card após confirmar que o usuário está visível na lista do UniFi.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="s-idsecure">
+  <div class="section-header" onclick="toggle('idsecure')">
+    <div class="section-title"><span>🟩</span>Passo a Passo — Control ID</div>
+    <span class="chevron" id="ch-idsecure">▼</span>
+  </div>
+  <div class="section-body" id="b-idsecure">
+    <p style="margin-bottom:10px;">Executado por Atendimento (quando há recepcionista) ou por Ops (quando não há).</p>
+    <div class="warn-box" style="margin-bottom:10px;">⚠️ Sempre busque o cliente antes de criar. Duplicata aqui gera conflito de acesso.</div>
+    <div class="step-block">
+      <div class="step-header i"><div class="step-num i">1</div><div class="step-name i">Acessar o Control ID</div></div>
+      <div class="step-body">
+        <a href="https://idsecure.com.br/auth/login" target="_blank" class="btn-link-green" style="margin-top:4px;">🔐 Login — Control ID <span class="arr">abrir →</span></a>
+        <div class="tip-box" style="margin-top:8px;">ℹ️ Use suas credenciais pessoais. Não compartilhe com outras colaboradoras.</div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header i"><div class="step-num i">2</div><div class="step-name i">Buscar se o cliente já existe</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Menu lateral → <strong>Cadastros → Pessoas</strong> → campo <strong>Pesquisar</strong> → digitar nome e sobrenome</div></div>
+        <div class="if-block" style="margin-top:10px;">
+          <div class="if-row" style="background:#fef2f2;border-color:#fecaca;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">pessoa <strong>encontrada</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent"><strong>Não crie nada.</strong> Jestor → card para <strong>Duplicado</strong></div></div></div>
+          <div class="if-row" style="background:#f0fdf4;border-color:#d1fae5;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">pessoa <strong>não encontrada</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Clicar em <strong>Nova Pessoa</strong> (botão azul, canto superior direito) → Passo 3</div></div></div>
+        </div>
+        <div class="warn-box" style="margin-top:8px;">⚠️ Pesquise por nome e sobrenome — só o nome pode gerar falso negativo.</div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header i"><div class="step-num i">3</div><div class="step-name i">Preencher os dados da nova pessoa</div></div>
+      <div class="step-body">
+        <div class="fields" style="flex-direction:column;gap:6px;margin-top:4px;">
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">Nome</span><span style="padding-top:2px;">Nome completo — idêntico ao Jestor</span></div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">Observações</span><span style="padding-top:2px;">Formato: <code style="background:#f2f2f2;padding:1px 4px;border-radius:3px;">[Unidade] - [Empresa]</code> — Ex: <code style="background:#f2f2f2;padding:1px 4px;border-radius:3px;">Brooklin - Pipo</code></span></div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip op">E-mail / Celular / Matrícula</span><span style="padding-top:2px;">Se disponível no formulário</span></div>
+        </div>
+        <div class="warn-box" style="margin-top:8px;">⚠️ Campo Observações é obrigatório. Siga o padrão de nomenclatura do sistema.</div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header i"><div class="step-num i">4</div><div class="step-name i">Adicionar e validar a foto</div></div>
+      <div class="step-body">
+        <ol style="padding-left:16px;margin-top:4px;">
+          <li>Clicar no ícone de <strong>upload</strong> (nuvem azul)</li>
+          <li>Selecionar a foto nos arquivos do computador</li>
+          <li>Aguardar o upload → clicar no <strong>ícone de check</strong> (✔) para validar</li>
+        </ol>
+        <div class="if-block" style="margin-top:10px;">
+          <div class="if-row" style="background:#f0fdf4;border-color:#d1fae5;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">foto <strong>aprovada</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Continuar para o Passo 5</div></div></div>
+          <div class="if-row" style="background:#fef2f2;border-color:#fecaca;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">foto <strong>reprovada</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Jestor → card para <strong>Foto não aprovada</strong></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header i"><div class="step-num i">5</div><div class="step-name i">Vincular grupo e empresa</div></div>
+      <div class="step-body">
+        <ol style="padding-left:16px;margin-top:4px;">
+          <li>Aba <strong>Grupos e Empresas</strong> → botão <strong>Vincular</strong></li>
+          <li>Buscar no formato <code style="background:#f2f2f2;padding:1px 4px;border-radius:3px;">Be in [Unidade] - [Andar]° - [Empresa]</code></li>
+          <li>Clicar na <strong>seta azul</strong> → mover para Selecionados → <strong>Salvar</strong></li>
+        </ol>
+        <div class="warn-box">⚠️ Empresas já estão cadastradas — não crie novas.</div>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-header i"><div class="step-num i">6</div><div class="step-name i">Salvar e atualizar o pipeline</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Salvar no Control ID → Jestor → card para <strong>Control ID / UniFi Concluído</strong></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="s-check">
+  <div class="section-header" onclick="toggle('check')">
+    <div class="section-title"><span>✅</span>Checklist Final de Validação</div>
+    <span class="chevron" id="ch-check">▼</span>
+  </div>
+  <div class="section-body" id="b-check">
+    <p style="margin-bottom:8px;">Clique em cada item para marcar como concluído.</p>
+    <ul class="checklist" id="checklist">
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Dados do cliente coletados e validados</span></li>
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Card em Nova Solicitação localizado <span class="check-sys cs-j">JESTOR</span></span></li>
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Cadastro autorizado pelo responsável da unidade <span class="check-sys cs-j">JESTOR</span></span></li>
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Sistema da unidade e responsável identificados na tabela de perfil operacional <span class="check-sys cs-j">JESTOR</span></span></li>
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Usuário criado com nome e e-mail corretos <span class="check-sys cs-u">UNIFI</span> ou <span class="check-sys cs-i">CONTROL ID</span></span></li>
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Grupo padrão da unidade vinculado <span class="check-sys cs-u">UNIFI</span></span></li>
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Campo Observações preenchido no formato correto <span class="check-sys cs-i">CONTROL ID</span></span></li>
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Foto validada e aprovada <span class="check-sys cs-i">CONTROL ID</span></span></li>
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Empresa vinculada em Grupos e Empresas <span class="check-sys cs-i">CONTROL ID</span></span></li>
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Card movido para Control ID / UniFi Concluído <span class="check-sys cs-b">AMBOS</span></span></li>
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Etapa do condomínio concluída (quando aplicável) <span class="check-sys cs-j">JESTOR</span></span></li>
+      <li onclick="checkItem(this)"><div class="check-box"><span>✓</span></div><span class="check-text">Card movido para Finalizado <span class="check-sys cs-j">JESTOR</span></span></li>
+    </ul>
+    <div id="check-progress" style="margin-top:12px;padding:10px;background:#dce8f7;border:1px solid #b8d0ef;border-radius:6px;font-size:12px;color:var(--blue);text-align:center;font-weight:600;">0 / 12 itens concluídos</div>
+  </div>
+</div>
+
+<div class="section" id="s-erros">
+  <div class="section-header" onclick="toggle('erros')">
+    <div class="section-title"><span>⚠️</span>Erros Comuns</div>
+    <span class="chevron" id="ch-erros">▼</span>
+  </div>
+  <div class="section-body" id="b-erros">
+    <div class="error-block">
+      <div class="error-header">🔴 Cadastro duplicado no Jestor</div>
+      <div class="error-body">
+        <div class="error-row"><div class="error-label">Como evitar</div><div class="error-val">Sempre busque o CPF/CNPJ antes de criar. Sem exceção.</div></div>
+        <div class="error-row"><div class="error-label">Como corrigir</div><div class="error-val">Identificar o registro correto → excluir ou mesclar o duplicado → atualizar no sistema de acesso se necessário</div></div>
+      </div>
+    </div>
+    <div class="error-block">
+      <div class="error-header">🔴 Acesso negado mesmo após cadastro (Control ID)</div>
+      <div class="error-body">
+        <div class="error-row"><div class="error-label">Por que acontece</div><div class="error-val">Foto reprovada ou erro de sincronização entre o Control ID e a controladora física.</div></div>
+        <div class="error-row"><div class="error-label">Como corrigir</div><div class="error-val">Verificar a foto → se reprovada, mover para <strong>Foto não aprovada</strong>. Se aprovada, aguardar sincronização ou acionar o responsável técnico.</div></div>
+      </div>
+    </div>
+    <div class="error-block">
+      <div class="error-header">🔴 Empresa errada em Grupos e Empresas (Control ID)</div>
+      <div class="error-body">
+        <div class="error-row"><div class="error-label">Como corrigir</div><div class="error-val">Editar no Control ID → Grupos e Empresas → desvincular a errada → vincular a correta → salvar</div></div>
+      </div>
+    </div>
+    <div class="error-block">
+      <div class="error-header">🟣 E-mail duplicado no UniFi</div>
+      <div class="error-body">
+        <div class="error-row"><div class="error-label">Por que acontece</div><div class="error-val">O cliente já possui cadastro ativo no UniFi daquela unidade</div></div>
+        <div class="error-row"><div class="error-label">Como corrigir</div><div class="error-val">Não criar — voltar ao Jestor e mover o card para <strong>Duplicado</strong></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="s-especiais">
+  <div class="section-header" onclick="toggle('especiais')">
+    <div class="section-title"><span>🔄</span>Situações Especiais</div>
+    <span class="chevron" id="ch-especiais">▼</span>
+  </div>
+  <div class="section-body" id="b-especiais">
+    <div class="sit-block">
+      <div class="sit-title">🔴 Cliente encontrado no sistema de acesso (duplicado)</div>
+      <div class="sit-body"><ol><li><strong>Não crie nada</strong> no sistema de acesso</li><li>Jestor → card para <strong>Duplicado</strong></li><li>Encerre o processo</li></ol><div class="warn-box" style="margin-top:8px;">⚠️ Não tente corrigir registros por conta própria. Sinalize como duplicado.</div></div>
+    </div>
+    <div class="sit-block">
+      <div class="sit-title">✏️ Alteração de dados de cliente já cadastrado</div>
+      <div class="sit-body"><ol><li>Altere primeiro no Jestor → salve e confirme</li><li>Replique a alteração no sistema de acesso da unidade</li><li>Verifique se o acesso continua funcionando</li></ol><div class="warn-box" style="margin-top:8px;">⚠️ Nunca altere só em um sistema. Sempre atualize os dois.</div></div>
+    </div>
+    <div class="sit-block">
+      <div class="sit-title">🚨 Urgência (acesso precisa funcionar agora)</div>
+      <div class="sit-body"><ol><li>Cadastre no sistema de acesso com os dados mínimos disponíveis</li><li>Libere o acesso temporariamente</li><li>Complete o cadastro no Jestor imediatamente após</li><li>Sinalize para o time</li></ol><div class="warn-box" style="margin-top:8px;">⚠️ Acesso emergencial não dispensa o cadastro completo posterior.</div></div>
+    </div>
+    <div class="sit-block">
+      <div class="sit-title">💻 Falha no sistema</div>
+      <div class="sit-body"><ul><li>Registre os dados em local seguro</li><li>Não tente cadastrar sem o sistema — isso evita registros incompletos</li><li>Assim que voltar, realize o cadastro completo e comunique a equipe</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="s-boas">
+  <div class="section-header" onclick="toggle('boas')">
+    <div class="section-title"><span>💡</span>Boas Práticas</div>
+    <span class="chevron" id="ch-boas">▼</span>
+  </div>
+  <div class="section-body" id="b-boas">
+    <ul class="bp-list">
+      <li><span class="bp-icon">📋</span>Consulte sempre a tabela de perfil operacional antes de ir ao sistema de acesso</li>
+      <li><span class="bp-icon">🔍</span>Sempre busque o CPF/CNPJ no Jestor antes de criar qualquer cadastro novo</li>
+      <li><span class="bp-icon">✅</span>Use o checklist desta SOP antes de iniciar — mesmo quando estiver com pressa</li>
+      <li><span class="bp-icon">💬</span>Em caso de dúvida, pergunte antes de salvar — é mais rápido do que corrigir depois</li>
+      <li><span class="bp-icon">🧪</span>Sempre teste o acesso após liberar — não assuma que funcionou</li>
+      <li><span class="bp-icon">📝</span>Registre exceções e situações incomuns para atualizar esta SOP</li>
+      <li><span class="bp-icon">🚫</span>Não compartilhe credenciais — cada pessoa usa o seu próprio login</li>
+      <li><span class="bp-icon">🔄</span>Se alterar algum dado em um sistema, atualize imediatamente no outro</li>
+      <li><span class="bp-icon">⚡</span>Em urgências: cadastre o mínimo para funcionar, mas complete depois sem falta</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+<script>
+  function toggle(id){const b=document.getElementById('b-'+id),c=document.getElementById('ch-'+id);b.classList.toggle('open');c.classList.toggle('open');}
+  function goTo(id){const el=document.getElementById('s-'+id);if(!el)return;const b=document.getElementById('b-'+id),c=document.getElementById('ch-'+id);if(b&&!b.classList.contains('open')){b.classList.add('open');if(c)c.classList.add('open');}el.scrollIntoView({behavior:'smooth',block:'start'});}
+  function checkItem(li){const box=li.querySelector('.check-box'),txt=li.querySelector('.check-text');box.classList.toggle('checked');txt.classList.toggle('checked');updateProgress();}
+  function updateProgress(){const total=document.querySelectorAll('#checklist li').length,done=document.querySelectorAll('#checklist .check-box.checked').length,p=document.getElementById('check-progress');if(done===total){p.style.background='#f0fdf4';p.style.borderColor='#22c55e';p.style.color='#065f46';p.textContent='🎉 '+done+'/'+total+' — Processo completo!';}else{p.style.background='#dce8f7';p.style.borderColor='#b8d0ef';p.style.color='#1D458B';p.textContent=done+' / '+total+' itens concluídos';}}
+</script>
+</body>
+</html>
