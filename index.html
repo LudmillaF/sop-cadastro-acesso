@@ -220,6 +220,224 @@
     </div>
   </div>
 </div>
-... (remaining content identical) ...
-</body>
-</html>
+
+<!-- PRÉ-REQUISITOS -->
+<div class="section" id="s-pre">
+  <div class="section-header" onclick="toggle('pre')">
+    <div class="section-title"><span>📋</span>Pré-Requisitos</div>
+    <span class="chevron" id="ch-pre">▼</span>
+  </div>
+  <div class="section-body" id="b-pre">
+    <div class="req-group">
+      <span class="req-title obrig">🔴 Obrigatório</span>
+      <ul class="req-list obrig">
+        <li>CPF ou CNPJ do cliente (válido)</li>
+        <li>Nome completo do cliente</li>
+        <li>Unidade / espaço associado ao acesso</li>
+        <li>Contrato ativo ou confirmação de vínculo</li>
+        <li>Data de início do acesso</li>
+        <li>Foto do cliente — enviada junto com o formulário (Control ID) ou não necessária (UniFi)</li>
+        <li>E-mail do cliente (obrigatório no UniFi)</li>
+      </ul>
+    </div>
+    <div class="req-group">
+      <span class="req-title import">🟡 Importante</span>
+      <ul class="req-list import">
+        <li>Telefone de contato</li>
+        <li>Data de fim do acesso (se aplicável)</li>
+      </ul>
+    </div>
+    <div class="warn-box mt">⚠️ Todos os dados chegam preenchidos pelo próprio cliente via formulário. O CPF é obrigatório para o cadastro no condomínio.</div>
+  </div>
+</div>
+
+<!-- JESTOR -->
+<div class="section" id="s-jestor">
+  <div class="section-header" onclick="toggle('jestor')">
+    <div class="section-title"><span>🟦</span>Passo a Passo — Jestor</div>
+    <span class="chevron" id="ch-jestor">▼</span>
+  </div>
+  <div class="section-body" id="b-jestor">
+    <p style="margin-bottom:10px;">Sistema de gestão interna. Ponto de entrada obrigatório para qualquer cadastro.</p>
+
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">1</div><div class="step-name j">Acessar o Jestor e ir para o Pipeline de Cadastro de Acesso</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Acesse <strong>app.jestor.com</strong> → entre com suas credenciais → localize <strong>OPS | Pipeline de Cadastro de Acesso</strong></div></div>
+        <div style="margin-top:8px;"><a href="https://my.jestor.fun/app/o1fqxwb8kpxutoxn7s280" target="_blank" class="btn-link">🗂️ Pipeline — Cadastro de Acesso <span class="arr">abrir →</span></a></div>
+        <div class="tip-box">ℹ️ O pipeline e os formulários já estão configurados. Não crie novos campos ou estruturas sem alinhamento com a equipe.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">2</div><div class="step-name j">Localizar o card no pipeline</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">O cliente preenche o formulário e o card já chega criado automaticamente com status <strong>Nova Solicitação</strong>. A colaboradora não preenche o formulário — apenas localiza e trata o card.</div></div>
+        <div class="if-block">
+          <div class="if-row"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">dados completos e corretos</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Responsável da unidade move para <strong>Cadastro Autorizado</strong></div></div></div>
+          <div class="if-row"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">dados incompletos ou incorretos</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Não avançar — acionar o responsável antes de qualquer ação</div></div></div>
+        </div>
+        <div class="warn-box">⚠️ Só avance para o sistema de acesso após o card estar em <strong>Cadastro Autorizado</strong>.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">3</div><div class="step-name j">Identificar o sistema da unidade</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Consultar a tabela de perfil operacional para saber qual sistema a unidade usa e se há recepcionista</div></div>
+        <div style="margin-top:8px;"><a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" class="btn-link">📋 Tabela — Perfil Operacional <span class="arr">abrir →</span></a></div>
+        <div class="routing-box" style="margin-top:10px;">
+          <div class="routing-title">Com base no perfil operacional, siga para:</div>
+          <div class="if-block" style="margin-top:0;">
+            <div class="if-row" style="background:#ede9f8;border-color:#c4b5fd;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">sistema = <strong>UniFi</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Acionar <strong>Ops</strong> → seção UniFi</div></div></div>
+            <div class="if-row" style="background:#f0fdf4;border-color:#d1fae5;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">sistema = <strong>Control ID</strong> + tem recepcionista</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent"><strong>Atendimento</strong> segue → seção Control ID</div></div></div>
+            <div class="if-row" style="background:#fefce8;border-color:#fde047;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">sistema = <strong>Control ID</strong> + sem recepcionista</div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Acionar <strong>Ops</strong> → seção Control ID</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">4</div><div class="step-name j">Selecionar o formulário correto</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Formulários disponíveis</div></div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/777035e3f8679cd5b9c246f1f204062d" target="_blank" class="btn-link">🏢 Formulário — Empresa XP <span class="arr">abrir →</span></a>
+          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/59c9e4b42564ec85c60b581ad79c7fac" target="_blank" class="btn-link">🏢 Formulário — Unidades de Coworking <span class="arr">abrir →</span></a>
+          <a href="https://share.jestor.fun/91365cc5c7724034b1f74f5b9868d7e1/3c66595fa1f625f2df06dd0ec2cbb284" target="_blank" class="btn-link">🏢 Formulário — Prudential <span class="arr">abrir →</span></a>
+        </div>
+        <div class="warn-box" style="margin-top:8px;">⚠️ Se o cliente não se encaixa em nenhum dos 3 formulários, não avance — acione a equipe antes de cadastrar.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header j"><div class="step-num j">5</div><div class="step-name j">Acompanhar o pipeline</div></div>
+      <div class="step-body">
+        <div class="subsection-title">Etapas do pipeline</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px;">
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#dce8f7;border:1px solid #b8d0ef;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:var(--blue);">🔵 Nova Solicitação</div><div>Automação. Card criado ao enviar o formulário. <strong>Não mover manualmente.</strong></div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#065f46;">✅ Cadastro Autorizado</div><div>Movido pelo responsável da unidade após validar os dados. Pronto para o sistema de acesso.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#fefce8;border:1px solid #fde047;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#854d0e;">⏳ Control ID / UniFi Pendente</div><div>Movido ao iniciar o cadastro no sistema de acesso. Processo em andamento.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#9a3412;">📷 Foto não aprovada</div><div><strong>Automação:</strong> e-mail disparado ao cliente. Quem aprova: o próprio Control ID. Aplicável somente a unidades Control ID.<br><div style="margin-top:4px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:4px;padding:4px 8px;font-size:11px;">✅ Aprovada → <strong>Control ID / UniFi Concluído</strong></div><div style="margin-top:4px;background:#fef2f2;border:1px solid #fecaca;border-radius:4px;padding:4px 8px;font-size:11px;">❌ Rejeitada → manter aqui — automação reenvia e-mail</div></div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#065f46;">✅ Control ID / UniFi Concluído</div><div>Movido após cadastro concluído no sistema de acesso. Se não há etapa de condomínio, avançar para Finalizado.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f7f7f7;border:1px solid var(--light);border-radius:6px;font-size:12px;"><div style="font-weight:700;color:var(--blue);">🏛️ Condomínio Pendente</div><div>Canal varia por unidade. Consulte a <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="color:var(--blue);font-weight:700;">tabela de perfil operacional</a>.<br><div style="margin-top:4px;background:#dce8f7;border:1px solid #b8d0ef;border-radius:4px;padding:4px 8px;font-size:11px;">📧 E-mail → automação dispara ao mover o card.</div><div style="margin-top:4px;background:#f2f2f2;border:1px solid var(--light);border-radius:4px;padding:4px 8px;font-size:11px;">📱 App ou Portal → não é responsabilidade do time de atendimento.</div></div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #d1fae5;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#065f46;">✅ Condomínio Concluído</div><div>Atualizado automaticamente após envio do e-mail. Avançar para Finalizado.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f0fdf4;border:1px solid #22c55e;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#14532d;">🏁 Finalizado</div><div>Processo completo. Acesso liberado e tudo registrado.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#991b1b;">🚫 Negado</div><div>Decisão do responsável da unidade. Regras de liberação devem ser alinhadas com a liderança previamente.</div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#f2f2f2;border:1px solid var(--light);border-radius:6px;font-size:12px;"><div style="font-weight:700;color:var(--mid);">👤 Pessoa Inativa</div><div>Acionado quando a empresa informa desligamento. <ol style="margin-top:6px;padding-left:16px;"><li>Mover card para <strong>Pessoa Inativa</strong></li><li>Consultar e-mail do condomínio na <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="color:var(--blue);font-weight:700;">tabela de perfil operacional</a> → coluna <strong>E-mail</strong></li><li>Enviar e-mail ao condomínio informando o bloqueio</li><li>Inativar no sistema de acesso da unidade (Control ID ou UniFi)</li></ol><div class="warn-box" style="margin-top:6px;">⚠️ Não inative sem confirmação da empresa.</div></div></div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:8px;padding:8px 10px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;font-size:12px;"><div style="font-weight:700;color:#991b1b;">🔁 Duplicado</div><div>Cliente já existe no sistema de acesso. Não criar nada — encerrar o processo aqui.</div></div>
+        </div>
+        <div class="tip-box" style="margin-top:10px;">ℹ️ Etapas com automação não precisam de ação manual além de mover o card para o status correto.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UNIFI -->
+<div class="section s-unifi" id="s-unifi">
+  <div class="section-header" onclick="toggle('unifi')">
+    <div class="section-title"><span>🟣</span>Passo a Passo — UniFi</div>
+    <span class="chevron" id="ch-unifi">▼</span>
+  </div>
+  <div class="section-body" id="b-unifi">
+    <p style="margin-bottom:10px;">Sistema de controle de acesso para unidades UniFi. <strong>Executado exclusivamente por Ops (Ludmilla ou Luana).</strong></p>
+    <div class="tip-box-purple" style="margin-bottom:10px;">🟣 O UniFi não exige busca prévia — o sistema avisa pelo e-mail se a pessoa já está cadastrada. O e-mail é obrigatório.</div>
+
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">1</div><div class="step-name u">Acessar o UniFi</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Entrar no portal UniFi com suas credenciais</div></div>
+        <div style="margin-top:8px;"><a href="https://unifi.ui.com" target="_blank" class="btn-link-purple">🔐 Login — UniFi <span class="arr">abrir →</span></a></div>
+        <div class="warn-box" style="margin-top:8px;">⚠️ Acesso restrito a Ops. Somente Ludmilla e Luana têm credenciais de acesso.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">2</div><div class="step-name u">Selecionar a unidade correta</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">No menu superior esquerdo, selecionar a unidade correspondente ao cadastro</div></div>
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Clique no seletor de site (ex: <strong>XP - BELÉM / PA - UDM SE</strong>) → selecione a unidade correta</div></div>
+        <div class="warn-box">⚠️ Confirme que está na unidade correta antes de criar o usuário. Cadastro na unidade errada libera acesso no lugar errado.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">3</div><div class="step-name u">Criar novo usuário</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">No painel lateral → <strong>Usuários ativos</strong> → clique no <strong>+ azul</strong> → abre o formulário <em>Criar novo usuário</em></div></div>
+        <div class="step-row"><div class="step-label">Campos a preencher</div>
+          <div class="fields" style="flex-direction:column;gap:6px;margin-top:4px;">
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">Primeiro nome</span><span style="padding-top:2px;">Primeiro nome — conforme Jestor</span></div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">Sobrenome</span><span style="padding-top:2px;">Restante do nome — conforme Jestor</span></div>
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">E-mail</span><span style="padding-top:2px;">Obrigatório. O sistema avisa se o e-mail já está cadastrado — não criar duplicata.</span></div>
+          </div>
+        </div>
+        <div class="tip-box" style="margin-top:8px;">ℹ️ Se o UniFi alertar que o e-mail já existe, volte ao Jestor e mova o card para <strong>Duplicado</strong>.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">4</div><div class="step-name u">Vincular ao grupo da unidade</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Na seção <strong>Grupos</strong> do formulário → clicar em <strong>Selecionar grupos</strong> → selecionar o User Group padrão da unidade</div></div>
+        <div class="step-row"><div class="step-label">Como saber o grupo correto</div><div class="step-val">Consulte a <a href="https://my.jestor.fun/object/q3nrqkek1hbwq0i403a4s" target="_blank" style="color:var(--blue);font-weight:700;">tabela de perfil operacional</a> — campo <strong>User Group padrão</strong> da unidade</div></div>
+        <div class="warn-box">⚠️ Não pule essa etapa. Sem o grupo vinculado, o cliente não terá as políticas de acesso da unidade aplicadas.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">5</div><div class="step-name u">Criar e confirmar</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Revisar os dados → clicar em <strong>Criar</strong> → confirmar que o usuário aparece na lista de Usuários ativos</div></div>
+        <div class="tip-box">ℹ️ Não é necessário adicionar credenciais (Touch Pass, NFC, PIN) neste momento — o processo padrão usa apenas o grupo de acesso.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header u"><div class="step-num u">6</div><div class="step-name u">Atualizar o pipeline no Jestor</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class":"step-label">Como fazer</div><div class="step-val">Voltar ao Jestor → mover o card para <strong>Control ID / UniFi Concluído</strong></div></div>
+        <div class="tip-box">ℹ️ Só mova o card após confirmar que o usuário foi criado e está visível na lista do UniFi.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTROL ID -->
+<div class="section" id="s-idsecure">
+  <div class="section-header" onclick="toggle('idsecure')">
+    <div class="section-title"><span>🟩</span>Passo a Passo — Control ID</div>
+    <span class="chevron" id="ch-idsecure">▼</span>
+  </div>
+  <div class="section-body" id="b-idsecure">
+    <p style="margin-bottom:10px;">Sistema de controle de acesso físico. Executado por Atendimento (quando há recepcionista) ou por Ops (quando não há).</p>
+    <div class="warn-box" style="margin-bottom:10px;">⚠️ Sempre busque o cliente no Control ID antes de criar. Duplicata aqui gera conflito de acesso.</div>
+
+    <div class="step-block">
+      <div class="step-header i"><div class="step-num i">1</div><div class="step-name i">Acessar o Control ID</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">O que fazer</div><div class="step-val">Entrar na plataforma com e-mail e senha</div></div>
+        <a href="https://idsecure.com.br/auth/login" target="_blank" class="btn-link-green" style="margin-top:8px;">🔐 Login — Control ID <span class="arr">abrir →</span></a>
+        <div class="tip-box" style="margin-top:8px;">ℹ️ Use suas credenciais pessoais. Não compartilhe com outras colaboradoras.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header i"><div class="step-num i">2</div><div class="step-name i">Buscar se o cliente já existe</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Como fazer</div><div class="step-val">Menu lateral → <strong>Cadastros → Pessoas</strong> → campo <strong>Pesquisar</strong> → digitar nome e sobrenome</div></div>
+        <div class="tip-box" style="margin-top:6px;">ℹ️ Mantenha o filtro em <strong>Ativos</strong>.</div>
+        <div class="if-block" style="margin-top:10px;">
+          <div class="if-row" style="background:#fef2f2;border-color:#fecaca;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">pessoa <strong>encontrada</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent"><strong>Não crie nada.</strong> Jestor → mova o card para <strong>Duplicado</strong></div></div></div>
+          <div class="if-row" style="background:#f0fdf4;border-color:#d1fae5;"><div class="if-col"><div class="if-label se">SE</div><div class="if-se">pessoa <strong>não encontrada</strong></div></div><div class="arrow-col">→</div><div class="if-col"><div class="if-label ent">ENTÃO</div><div class="if-ent">Clicar em <strong>Nova Pessoa</strong> (botão azul, canto superior direito) → Passo 3</div></div></div>
+        </div>
+        <div class="warn-box" style="margin-top:8px;">⚠️ Pesquise por nome e sobrenome — só o nome pode gerar falso negativo.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-header i"><div class="step-num i">3</div><div class="step-name i">Preencher os dados da nova pessoa</div></div>
+      <div class="step-body">
+        <div class="step-row"><div class="step-label">Campos a preencher</div>
+          <div class="fields" style="flex-direction:column;gap:6px;margin-top:4px;">
+            <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;"><span class="field-chip critic">Nome</span><span style="padding-top:2px;">Nome completo — idênci...
